@@ -1,0 +1,18 @@
+name: 'minikube'
+description: 'Test your code against real kubernetes in github.'
+author: medyagh
+inputs:
+  who-to-greet:  # id of input
+    description: 'Who to greet'
+    required: true
+    default: 'World'
+  driver:  # id of input
+    description: 'which driver to use, options are docker, none, podman'
+    required: true
+    default: 'docker'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'node12'
+  main: 'index.js'
