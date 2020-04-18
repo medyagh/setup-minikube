@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/medyagh/minikube-action/issues"
   },
-  "homepage": "https://github.com/medyagh/minikube-action#readme"
+  "homepage": "https://github.com/medyagh/minikube-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "@actions/github": "^2.1.1"
+  }
 }
