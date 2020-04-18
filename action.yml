@@ -5,9 +5,18 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  driver:  
+    description: 'which driver to user, options are docker, none, and podman'
+    required: true
+    default: 'docker'
 outputs:
   time: # id of output
     description: 'The time we we greeted you'
+  user_driver: # id of output
+    description: 'the driver you picked'
+  start_logs: # id of output
+    description: 'the logs from minikube start'
+
 runs:
   using: 'node12'
   main: 'index.js'
