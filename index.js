@@ -29,9 +29,6 @@ function startMinikube() {
 try {
   const driver = core.getInput('driver');
   console.log(`Hello ${driver}!`);
-
-  core.setOutput("time", time);
-  core.setOutput("user_driver", driver);
   function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
