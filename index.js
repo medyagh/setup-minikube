@@ -64,6 +64,7 @@ function downloadMinikube(version) {
 function startMinikube() {
   return __awaiter(this, void 0, void 0, function* () {
       yield exec.exec('minikube', 'start', '--wait=all');
+      core.info('minikube started successfully.')
   });
 }
 
