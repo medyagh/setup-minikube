@@ -63,14 +63,14 @@ function downloadMinikube(version) {
 
 function startMinikube() {
   return __awaiter(this, void 0, void 0, function* () {
-      yield exec.exec('minikube', 'start', '--wait=true');
+      yield exec.exec('minikube', 'start', '--wait=all');
   });
 }
 
 function run() {
   return __awaiter(this, void 0, void 0, function* () {
       try {
-          yield downloadMinikube('1.9.2');
+          yield downloadMinikube('1.10.0-beta.1');
           console.info('Starting minikube');
           yield startMinikube();
           console.info('Finished starting minikube');
