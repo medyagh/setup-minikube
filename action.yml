@@ -3,22 +3,10 @@ description: "test your app against real kubernetes."
 inputs:
   action: # id of input
     description: "minikube command to run, could be start, pause, unpause, stop, status."
-    required: true
+    required: false
     default: "start"
   driver:
     description: "which driver to user, options are docker, none, and podman"
-    required: true
-    default: "docker"
-  minikube_version:
-    description: "minikube's version. defaults to current latest 1.9.2"
-    required: false
-    default: "latest"
-  kubernetes-version:
-    description: "minikube's version. defaults to current latest 1.9.2"
-    required: false
-    default: "latest"
-  container-runtime:
-    description: "container runtime to use, options: docker, containerd, cri-o"
     required: false
     default: "docker"
 outputs:
@@ -28,7 +16,6 @@ outputs:
     description: "the logs from minikube start"
   logs: # id of output
     description: "the output of minikube logs"
-
 runs:
   using: "node12"
   main: "index.js"
