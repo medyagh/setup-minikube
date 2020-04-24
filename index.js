@@ -1,17 +1,53 @@
 const core = require('@actions/core');
-const github = require('@actions/github');
+const exec = require("@actions/exec");
+const tc = require("@actions/tool-cache");
+
+function getDownloadUrl(version) {
+  const osPlat = os.platform();
+  const platform = osPlat === 'win32' ? 'windows' : osPlat;
+  const suffix = osPlat === 'win32' ? '.exe' : '';
+  return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
+}
+
+function downloadMinikube(version) {
+  return __awaiter(this, void 0, void 0, function* () {
+      let url = getDownloadUrl(version);
+      console.info('Downloading minikube from ' + url);
+      downloadPath = yield tc.downloadTool(url);
+      yield exec.exec('sudo', 'install',downloadPath,'/usr/local/bin/minikube');
+      core.addPath('/usr/local/bin/minikube');
+  });
+}
+
+function startMinikube() {
+  return __awaiter(this, void 0, void 0, function* () {
+      yield exec.exec('minikube', 'start','--wait=all');
+  });
+}
+
 
 try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet');
   const driver = core.getInput('driver');
-  console.log(`Hello ${nameToGreet}!`);
-  const time = (new Date()).toTimeString();
+  console.log(`Hello ${driver}!`);
+
   core.setOutput("time", time);
   core.setOutput("user_driver", driver);
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`);
+  function run() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            yield downloadMinikube('1.9.2');
+            yield startMinikube();
+        }
+        catch (error) {
+            core.setFailed(error.message);
+        }
+    });
+  }
+  run();
+
+
+
+
 } catch (error) {
   core.setFailed(error.message);
 }
