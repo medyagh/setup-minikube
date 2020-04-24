@@ -1,51 +1,80 @@
-const core = require('@actions/core');
+const core = require("@actions/core");
 const exec = require("@actions/exec");
 const tc = require("@actions/tool-cache");
 
+var __awaiter =
+  (this && this.__awaiter) ||
+  function (thisArg, _arguments, P, generator) {
+    function adopt(value) {
+      return value instanceof P
+        ? value
+        : new P(function (resolve) {
+            resolve(value);
+          });
+    }
+    return new (P || (P = Promise))(function (resolve, reject) {
+      function fulfilled(value) {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function rejected(value) {
+        try {
+          step(generator["throw"](value));
+        } catch (e) {
+          reject(e);
+        }
+      }
+      function step(result) {
+        result.done
+          ? resolve(result.value)
+          : adopt(result.value).then(fulfilled, rejected);
+      }
+      step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+  };
+
 
 function getDownloadUrl(version) {
-  const osPlat = os.platform();
-  const platform = osPlat === 'win32' ? 'windows' : osPlat;
-  const suffix = osPlat === 'win32' ? '.exe' : '';
-  return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
+    const osPlat = os.platform();
+    const platform = osPlat === 'win32' ? 'windows' : osPlat;
+    const suffix = osPlat === 'win32' ? '.exe' : '';
+    return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
 }
 
 function downloadMinikube(version) {
-  return await(this, void 0, void 0, function* () {
+  return __awaiter(this, void 0, void 0, function* () {
       let url = getDownloadUrl(version);
-      console.info('Downloading minikube from ' + url);
+      console.info('Downloading Minikube from ' + url);
+      let downloadPath = null;
       downloadPath = yield tc.downloadTool(url);
-      yield exec.exec('sudo', 'install',downloadPath,'/usr/local/bin/minikube');
-      core.addPath('/usr/local/bin/minikube');
+      const binPath = '/home/runner/bin';
+      yield io.mkdirP(binPath);
+      yield exec.exec('chmod', ['+x', downloadPath]);
+      yield io.mv(downloadPath, path.join(binPath, 'minikube'));
+      core.addPath(binPath);
   });
 }
 
 function startMinikube() {
-  return await(this, void 0, void 0, function* () {
-      yield exec.exec('minikube', 'start','--wait=all');
+  return __awaiter(this, void 0, void 0, function* () {
+      yield exec.exec('minikube', 'start', '--wait=true');
   });
 }
 
-
-try {
-  const driver = core.getInput('driver');
-  console.log(`Hello ${driver}!`);
-  function run() {
-    return await(this, void 0, void 0, function* () {
-        try {
-            yield downloadMinikube('1.9.2');
-            yield startMinikube();
-        }
-        catch (error) {
-            core.setFailed(error.message);
-        }
-    });
-  }
-  run();
-
-
-
-
-} catch (error) {
-  core.setFailed(error.message);
+function run() {
+  return __awaiter(this, void 0, void 0, function* () {
+      try {
+          yield downloadMinikube('1.9.2');
+          console.info('Starting minikube');
+          yield startMinikube();
+          console.info('Finished starting minikube');
+      }
+      catch (error) {
+          core.setFailed(error.message);
+      }
+  });
 }
+run();
