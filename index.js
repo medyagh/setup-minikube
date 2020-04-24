@@ -1,6 +1,9 @@
 const core = require("@actions/core");
 const exec = require("@actions/exec");
 const tc = require("@actions/tool-cache");
+const io = __importStar(require("@actions/io"));
+const path = __importStar(require("path"));
+const os = __importStar(require("os"));
 
 var __awaiter =
   (this && this.__awaiter) ||
