@@ -67,7 +67,7 @@ function startMinikube() {
       yield exec.exec('minikube', 'start', '--wait=all');
       core.info('minikube started successfully.')
       core.info('starting minikube tunnel in the background')
-      yield exec.exec('sudo', 'nohup', 'minikube', 'tunnel', '>', '/dev/null', '2>&1', '&');    
+      yield exec.exec('sudo', 'nohup minikube tunnel > /dev/null 2>&1 &');    
   });
 }
 
