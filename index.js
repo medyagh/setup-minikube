@@ -66,8 +66,6 @@ function startMinikube() {
   return __awaiter(this, void 0, void 0, function* () {
       yield exec.exec('minikube', 'start', '--wait=all');
       core.info('minikube started successfully.')
-      core.info('starting minikube tunnel in the background')
-      exec.exec('sudo', '/bin/bash', '-c', '"minikube tunnel &> /dev/null &"');    
   });
 }
 
