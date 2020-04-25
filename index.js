@@ -4,9 +4,7 @@ const tc = require("@actions/tool-cache");
 const io = require("@actions/io");
 const path = require("path");
 const os = require("os");
-var fs = require('fs'),
-const cexec = require('child_process').exec,
-
+var cexec = require('child_process').exec;
 
 var __awaiter =
   (this && this.__awaiter) ||
