@@ -4,7 +4,6 @@ const tc = require("@actions/tool-cache");
 const io = require("@actions/io");
 const path = require("path");
 const os = require("os");
-var cexec = require('child_process').exec;
 
 var __awaiter =
   (this && this.__awaiter) ||
@@ -42,15 +41,6 @@ var __awaiter =
 
 
 
-function nohup(cmd, options, callback){
-  if(typeof options === 'function'){
-      callback = options;
-      options = null;
-  }
-  cexec('nohup ' + cmd + ' > /dev/null 2>&1 &', options, callback);
-}
-
-
 function getDownloadUrl(version) {
     const osPlat = os.platform();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
@@ -77,12 +67,7 @@ function startMinikube() {
       yield exec.exec('minikube', 'start', '--wait=all');
       core.info('minikube started successfully.')
       core.info('starting minikube tunnel in the background')
-      nohup('sudo minikube tunnel &', function(){
-        console.log('done');
-      });
-      
-
-      
+      exec.exec('nohup', 'sudo', 'minikube', 'tunnel', '>', '/dev/null', '2>&1', '&');    
   });
 }
 
