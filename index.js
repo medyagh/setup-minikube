@@ -40,6 +40,18 @@ var __awaiter =
   };
 
 
+  var fs = require('fs'),
+  exec = require('child_process').exec,
+  isWin = process.platform.indexOf('win') === 0;
+
+function nohup(options, callback){
+  if(typeof options === 'function'){
+      callback = options;
+      options = null;
+  }
+  exec.exec('nohup','sudo','minikube', 'tunnel', ' > /dev/null 2>&1 &');
+}
+
 function getDownloadUrl(version) {
     const osPlat = os.platform();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
@@ -66,7 +78,11 @@ function startMinikube() {
       yield exec.exec('minikube', 'start', '--wait=all');
       core.info('minikube started successfully.')
       core.info('starting minikube tunnel in the background')
-      exec.exec('minikube', 'tunnel', '&');
+      nohup(function(){
+        console.log('tunnel exited');
+      });
+
+      
   });
 }
 
