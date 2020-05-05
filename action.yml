@@ -1,6 +1,9 @@
 name: "setup-minikube"
 description: "test your app against real kubernetes."
 author: 'Medya Gh'
+branding:
+  icon: 'box'  
+  color: 'blue'
 inputs:
   action: # id of input
     description: "minikube command to run, could be start, pause, unpause, stop, status."
