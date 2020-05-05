@@ -10,6 +10,10 @@ inputs:
     description: "which driver to user, options are docker, none, and podman"
     required: false
     default: "docker"
+  myInput:              # change this
+    required: false
+    description: 'input description here'
+    default: "10"
 runs:
   using: 'node12'
   main: 'dist/index.js'
