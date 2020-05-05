@@ -15,7 +15,7 @@ jobs:
     steps:
     - name: start minikube 
       id: minikube
-      uses: medyagh/minikube-action@master
+      uses: medyagh/setup-minikube@master
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl 
       run: kubectl get pods -A
@@ -24,3 +24,4 @@ jobs:
 
 ### Example workflow 2: Build image and deploy to kubernetes on pull request
 
+See [examples](https://github.com/medyagh/setup-minikube/tree/master/examples) folder
