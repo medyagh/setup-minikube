@@ -1283,15 +1283,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             yield minikube_1.DownloadMinikube('1.10.0-beta.1');
-            console.info('Starting minikube');
             yield minikube_1.StartMinikube();
-            console.info('Finished starting minikube');
-            const ms = core.getInput('milliseconds');
-            core.debug(`Waiting ${ms} milliseconds ...`);
-            core.debug(new Date().toTimeString());
-            yield minikube_1.wait(parseInt(ms, 10));
-            core.debug(new Date().toTimeString());
-            core.setOutput('time', new Date().toTimeString());
         }
         catch (error) {
             core.setFailed(error.message);
@@ -4609,17 +4601,6 @@ const tc = __importStar(__webpack_require__(533));
 const os = __importStar(__webpack_require__(87));
 const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
-function wait(milliseconds) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => {
-            if (isNaN(milliseconds)) {
-                throw new Error('milliseconds not a number');
-            }
-            setTimeout(() => resolve('done!'), milliseconds);
-        });
-    });
-}
-exports.wait = wait;
 function StartMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
         yield exec.exec('minikube', ['start', '--wait=all']);
@@ -4635,14 +4616,13 @@ function getDownloadUrl(version) {
 exports.getDownloadUrl = getDownloadUrl;
 function DownloadMinikube(version) {
     return __awaiter(this, void 0, void 0, function* () {
-        let url = getDownloadUrl(version);
-        console.info('Downloading Minikube from ' + url);
-        let downloadPath = yield tc.downloadTool(url);
+        const url = getDownloadUrl(version);
+        const downloadPath = yield tc.downloadTool(url);
         const binPath = '/home/runner/bin';
         yield io.mkdirP(binPath);
         yield exec.exec('chmod', ['+x', downloadPath]);
         yield io.mv(downloadPath, path.join(binPath, 'minikube'));
-        yield core.addPath(binPath);
+        core.addPath(binPath);
     });
 }
 exports.DownloadMinikube = DownloadMinikube;
