@@ -1,4 +1,4 @@
-name: "minikube"
+name: "setup-minikube"
 description: "test your app against real kubernetes."
 author: 'Medya Gh'
 inputs:
