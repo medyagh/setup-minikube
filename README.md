@@ -1,6 +1,5 @@
 # minikube-action
-- Install and starts minikube in github action workflow.
-- Test and build your app in a real kubernetes cluster.
+- build/deploy/test your applicaiton against a real kubernetes cluster in github actions.
 
 ### Example workflow 1: start kubernetes on pull request
 
