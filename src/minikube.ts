@@ -19,7 +19,8 @@ export function getDownloadUrl(version: string): string {
 export async function DownloadMinikube(version: string): Promise<void> {
   const url = getDownloadUrl(version)
   const downloadPath = await tc.downloadTool(url)
-  const binPath = '/home/runner/bin'
+  const binPath =
+    os.platform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin'
   await io.mkdirP(binPath)
   await exec.exec('chmod', ['+x', downloadPath])
   await io.mv(downloadPath, path.join(binPath, 'minikube'))
