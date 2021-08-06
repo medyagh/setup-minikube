@@ -1282,7 +1282,7 @@ const minikube_1 = __webpack_require__(928);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield minikube_1.DownloadMinikube('1.10.0-beta.1');
+            yield minikube_1.DownloadMinikube('1.22.0');
             yield minikube_1.StartMinikube();
         }
         catch (error) {
