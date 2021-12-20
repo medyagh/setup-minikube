@@ -5,6 +5,10 @@ branding:
   icon: 'box'  
   color: 'blue'
 inputs:
+  minikube-version:
+    description: "version of minikube"
+    required: false
+    default: '1.10.1'
   action: # id of input
     description: "minikube command to run, could be start, pause, unpause, stop, status."
     required: false
