@@ -8,7 +8,7 @@ inputs:
   minikube-version:
     description: "version of minikube"
     required: false
-    default: '1.10.1'
+    default: 'latest'
   action: # id of input
     description: "minikube command to run, could be start, pause, unpause, stop, status."
     required: false
@@ -17,10 +17,6 @@ inputs:
     description: "which driver to user, options are docker, none, and podman"
     required: false
     default: "docker"
-  myInput:              # change this
-    required: false
-    description: 'input description here'
-    default: "10"
 runs:
   using: 'node12'
   main: 'dist/index.js'
