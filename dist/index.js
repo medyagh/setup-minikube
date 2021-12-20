@@ -4736,7 +4736,7 @@ function DownloadMinikube(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = getDownloadUrl(version);
         const downloadPath = yield tc.downloadTool(url);
-        const binPath = '/home/runner/bin';
+        const binPath = os.platform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
         yield io.mkdirP(binPath);
         yield exec.exec('chmod', ['+x', downloadPath]);
         yield io.mv(downloadPath, path.join(binPath, 'minikube'));
