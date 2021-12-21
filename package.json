@@ -1,6 +1,6 @@
 {
   "name": "minikube-action",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "description": "start a kubernetes cluster in github actions",
   "main": "lib/main.js",
