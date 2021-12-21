@@ -1,22 +1,26 @@
-name: "setup-minikube"
-description: "test your app against real kubernetes."
+name: 'setup-minikube'
+description: 'test your app against real Kubernetes.'
 author: 'Medya Gh'
 branding:
   icon: 'box'  
   color: 'blue'
 inputs:
   minikube-version:
-    description: "version of minikube"
+    description: 'Choose a specific version of minikube'
     required: false
     default: 'latest'
-  action: # id of input
-    description: "minikube command to run, could be start, pause, unpause, stop, status."
+  action:
+    description: 'minikube command to run, could be start, pause, unpause, stop, status.'
     required: false
-    default: "start"
+    default: 'start'
   driver:
-    description: "which driver to user, options are docker, none, and podman"
+    description: 'Choose a specific driver, one of: docker, none, podman, virtualbox, parallels, vmwarefusion, hyperkit, vmware, ssh'
     required: false
-    default: "docker"
+    default: ''
+  container-runtime:
+    description: 'Choose a specific container-runtime, one of: docker, containerd, cri-o'
+    required: false
+    default: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'

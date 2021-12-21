@@ -5384,7 +5384,16 @@ const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
 function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
-        yield exec.exec('minikube', ['start', '--wait=all']);
+        const args = ['start', '--wait', 'all'];
+        const driver = core.getInput('driver');
+        if (driver !== '') {
+            args.push('--driver', driver);
+        }
+        const containerRuntime = core.getInput('container-runtime');
+        if (containerRuntime !== '') {
+            args.push('--container-runtime', containerRuntime);
+        }
+        yield exec.exec('minikube', args);
     });
 }
 exports.startMinikube = startMinikube;
@@ -5392,8 +5401,9 @@ function getDownloadUrl(version) {
     const osPlat = os.platform();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
     const suffix = osPlat === 'win32' ? '.exe' : '';
-    if (version === 'latest')
+    if (version === 'latest') {
         return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+    }
     return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
 }
 exports.getDownloadUrl = getDownloadUrl;

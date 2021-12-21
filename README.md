@@ -5,10 +5,18 @@
 
 ### minikube-action Arguments
 - minikube-version (optional)
-  - description: allows you to use a specific minikube version
+  - description: Choose a specific minikube version
   - default: latest
   - format: X.X.X
   - example: 1.24.0
+- driver (optional)
+  - description: Choose a specific driver
+  - default: '' (minikube will auto choose)
+  - options: docker, none, podman, virtualbox, parallels, vmwarefusion, hyperkit, vmware, ssh
+- container-runtime (optional)
+  - description: Choose a specific container-runtime
+  - default: '' (minikube will auto choose)
+  - options: docker, containerd, cri-o
 
 ### Example Workflow 1: Start Kubernetes on pull request
 
@@ -30,7 +38,7 @@ jobs:
       run: kubectl get pods -A
 ```
 
-### Example Workflow 2: Start Kubernetes on pull request with specific minikube version
+### Example Workflow 2: Start Kubernetes on pull request with specific minikube version, driver, and container-runtime
 
 ```
 name: CI
@@ -43,7 +51,10 @@ jobs:
     steps:
     - name: start minikube
       id: minikube
-      minikube-version: 1.24.0
+      with:
+        minikube-version: 1.24.0
+        driver: docker
+        container-runtime: containerd
       uses: medyagh/setup-minikube@master
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
