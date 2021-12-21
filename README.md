@@ -88,4 +88,4 @@ jobs:
 [More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
 
 ### About Auhtor
-Follow me on [twitter](https://twitter.com/minikube_dev) for my dev news !
+Follow me on [twitter](https://twitter.com/medya_dev) for my dev news !
