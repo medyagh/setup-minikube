@@ -6,7 +6,16 @@ import * as io from '@actions/io';
 import * as path from 'path';
 
 export async function startMinikube(): Promise<void> {
-  await exec.exec('minikube', ['start', '--wait=all']);
+  const args = ['start', '--wait', 'all']
+  const driver = core.getInput('driver')
+  if (driver !== '') {
+	  args.push('--driver', driver)
+  }
+  const containerRuntime = core.getInput('container-runtime')
+  if (containerRuntime !== '') {
+	  args.push('--container-runtime', containerRuntime)
+  }
+  await exec.exec('minikube', args)
 }
 
 export function getDownloadUrl(version: string): string {
