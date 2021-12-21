@@ -15,20 +15,25 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/medyagh/setup-minikube"
   },
   "keywords": [
     "minikube",
+    "minikube CI",
+    "test aginst kubernetes",
+    "test kubernetes",
+    "kuberentes CI",
     "kubernetes",
+    "kubernetes cluster",
     "github",
     "actions"
   ],
   "author": "medyagh",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/exec": "^1.0.4",
-    "@actions/tool-cache": "^1.3.4"
+    "@actions/core": "^1.6.0",
+    "@actions/exec": "^1.1.0",
+    "@actions/tool-cache": "^1.7.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",
