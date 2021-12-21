@@ -1,4 +1,6 @@
+
 # minikube-action
+- a github action for minikube by minikube maintainers. 
 - build/deploy/test your application against a real Kubernetes cluster in GitHub Actions.
 
 ### minikube-action Arguments
@@ -84,3 +86,6 @@ jobs:
 ```
 
 [More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
+
+### About Auhtor
+Follow me on [twitter](https://twitter.com/minikube_dev) for my dev news !
