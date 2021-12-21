@@ -1,14 +1,14 @@
-import * as core from '@actions/core'
+import * as core from '@actions/core';
 
-import {DownloadMinikube, StartMinikube} from './minikube'
-
+import {downloadMinikube, startMinikube} from './minikube';
+// main thing :)
 async function run(): Promise<void> {
   try {
-    await DownloadMinikube(core.getInput('minikube-version'))
-    await StartMinikube()
+    await downloadMinikube(core.getInput('minikube-version'));
+    await startMinikube();
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error.message);
   }
 }
 
-run()
+run();
