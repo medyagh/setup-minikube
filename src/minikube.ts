@@ -7,11 +7,11 @@ import * as path from 'path';
 
 export async function startMinikube(): Promise<void> {
   const args = ['start', '--wait', 'all']
-  const driver = core.getInput('driver')
+  const driver = core.getInput('driver').toLowerCase()
   if (driver !== '') {
 	  args.push('--driver', driver)
   }
-  const containerRuntime = core.getInput('container-runtime')
+  const containerRuntime = core.getInput('container-runtime').toLowerCase()
   if (containerRuntime !== '') {
 	  args.push('--container-runtime', containerRuntime)
   }
@@ -22,10 +22,14 @@ export function getDownloadUrl(version: string): string {
   const osPlat = os.platform();
   const platform = osPlat === 'win32' ? 'windows' : osPlat;
   const suffix = osPlat === 'win32' ? '.exe' : '';
-  if (version === 'latest') {
-    return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+  switch (version) {
+    case 'latest':
+      return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+    case 'head':
+      return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-amd64${suffix}`
+    default:
+      return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
   }
-  return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
 }
 
 export async function downloadMinikube(version: string): Promise<void> {
