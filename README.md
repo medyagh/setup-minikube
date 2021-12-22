@@ -3,7 +3,7 @@
 - build/deploy/test your application against a real Kubernetes cluster in GitHub Actions.
 - maintained by minikube maintainers. 
 
-
+---
 ## Basic Usage
 ```
     steps:
@@ -42,16 +42,15 @@
     - docker (default)
     - containerd
     - cri-o
-
-### Examples
+---
+## Examples
 - [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
 
 - [Example 2: Start Kubernetes and specify minikube version, driver and container-runtime](https://github.com/medyagh/setup-minikube#example-2)
 
 - [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
 
-Build image and deploy to Kubernetes on pull request
-
+---
 ## Example 1: 
 #### Start Kubernetes on pull request
 
