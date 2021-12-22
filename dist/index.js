@@ -1595,7 +1595,7 @@ const minikube_1 = __webpack_require__(928);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield minikube_1.downloadMinikube(core.getInput('minikube-version'));
+            yield minikube_1.downloadMinikube(core.getInput('minikube-version').toLowerCase());
             yield minikube_1.startMinikube();
         }
         catch (error) {
@@ -5385,11 +5385,11 @@ const path = __importStar(__webpack_require__(622));
 function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['start', '--wait', 'all'];
-        const driver = core.getInput('driver');
+        const driver = core.getInput('driver').toLowerCase();
         if (driver !== '') {
             args.push('--driver', driver);
         }
-        const containerRuntime = core.getInput('container-runtime');
+        const containerRuntime = core.getInput('container-runtime').toLowerCase();
         if (containerRuntime !== '') {
             args.push('--container-runtime', containerRuntime);
         }
@@ -5401,10 +5401,14 @@ function getDownloadUrl(version) {
     const osPlat = os.platform();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
     const suffix = osPlat === 'win32' ? '.exe' : '';
-    if (version === 'latest') {
-        return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+    switch (version) {
+        case 'latest':
+            return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+        case 'head':
+            return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-amd64${suffix}`;
+        default:
+            return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
     }
-    return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
 }
 exports.getDownloadUrl = getDownloadUrl;
 function downloadMinikube(version) {

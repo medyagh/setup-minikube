@@ -6,7 +6,7 @@ branding:
   color: 'blue'
 inputs:
   minikube-version:
-    description: 'Choose a specific version of minikube'
+    description: 'Choose a specific version of minikube, "latest" for the latest stable build, or "HEAD" for the latest development build'
     required: false
     default: 'latest'
   action:

@@ -7,7 +7,7 @@
 - minikube-version (optional)
   - description: Choose a specific minikube version
   - default: latest
-  - format: X.X.X
+  - options: version in format of X.X.X, 'latest' for the latest stable build, or 'HEAD' for the latest development build
   - example: 1.24.0
 - driver (optional)
   - description: Choose a specific driver
