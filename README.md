@@ -11,7 +11,6 @@
       uses: medyagh/setup-minikube@master
 
 ```
----
 
 ## Cofigurable Fields
 - minikube-version (optional)
@@ -41,7 +40,7 @@
     - docker (default)
     - containerd
     - cri-o
----
+
 ## Examples
 - [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
 
@@ -49,7 +48,6 @@
 
 - [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
 
----
 ## Example 1: 
 #### Start Kubernetes on pull request
 
