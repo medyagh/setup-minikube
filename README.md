@@ -3,7 +3,6 @@
 - build/deploy/test your application against a real Kubernetes cluster in GitHub Actions.
 - maintained by minikube maintainers. 
 
----
 ## Basic Usage
 ```
     steps:
