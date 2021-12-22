@@ -3,14 +3,23 @@
 - a github action for minikube by minikube maintainers. 
 - build/deploy/test your application against a real Kubernetes cluster in GitHub Actions.
 
-### minikube-action Arguments
+## Basic Usage
+```
+    steps:
+    - name: start minikube
+      id: minikube
+      uses: medyagh/setup-minikube@master
+
+```
+---
+
+## Cofigurable Fields
 - minikube-version (optional)
-  - description: Choose a specific minikube version
   - default: latest
-  - options: version in format of X.X.X, 'latest' for the latest stable build, or 'HEAD' for the latest development build
+  - options: version in format of 'X.X.X', 'latest' for the latest stable build, or 'HEAD' for the latest development build
   - example: 1.24.0
+
 - driver (optional)
-  - description: Choose a specific driver
   - default: '' (minikube will auto choose)
   - options: docker, none, podman, virtualbox, parallels, vmwarefusion, hyperkit, vmware, ssh
 - container-runtime (optional)
@@ -18,9 +27,9 @@
   - default: '' (minikube will auto choose)
   - options: docker, containerd, cri-o
 
-### Example Workflow 1: Start Kubernetes on pull request
+## Example 1: 
+#### Start Kubernetes on pull request
 
-full  .github/workflows/main.yml
 ```
 name: CI
 on:
@@ -38,7 +47,8 @@ jobs:
       run: kubectl get pods -A
 ```
 
-### Example Workflow 2: Start Kubernetes on pull request with specific minikube version, driver, and container-runtime
+## Example 2
+### Start Kubernetes on pull request and specify minikube version, driver, and container-runtime
 
 ```
 name: CI
@@ -61,7 +71,8 @@ jobs:
       run: kubectl get pods -A
 ```
 
-### Example Workflow 3: Build image and deploy to Kubernetes on pull request
+## Example 3:
+### Build image and deploy to Kubernetes on pull request
 ```
 name: CI
 on:
@@ -98,5 +109,6 @@ jobs:
 
 [More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
 
-### About Auhtor
-Follow me on [twitter](https://twitter.com/medya_dev) for my dev news !
+## About Auhtor
+
+Medya Ghazizadeh, Follow me on [twitter](https://twitter.com/medya_dev) for my dev news !
