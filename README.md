@@ -1,7 +1,8 @@
 
-# minikube-action
-- a github action for minikube by minikube maintainers. 
+## About setup-minikube
 - build/deploy/test your application against a real Kubernetes cluster in GitHub Actions.
+- maintained by minikube maintainers. 
+
 
 ## Basic Usage
 ```
@@ -16,16 +17,40 @@
 ## Cofigurable Fields
 - minikube-version (optional)
   - default: latest
-  - options: version in format of 'X.X.X', 'latest' for the latest stable build, or 'HEAD' for the latest development build
+  - options: 
+      - version in format of 'X.X.X'
+      - 'latest' for the latest stable release
+      - 'HEAD' for the latest development build
   - example: 1.24.0
 
 - driver (optional)
-  - default: '' (minikube will auto choose)
-  - options: docker, none, podman, virtualbox, parallels, vmwarefusion, hyperkit, vmware, ssh
+  - default: auto-select
+  - options: 
+    - docker
+    - none (baremetal)
+    - virtualbox (available on macOs free agents)
+    - also if installed on agent you can also use:
+      - podman (if installed)
+      - parallels 
+      - vmwarefusion
+      - hyperkit
+      - vmware
+      - ssh
 - container-runtime (optional)
   - description: Choose a specific container-runtime
-  - default: '' (minikube will auto choose)
-  - options: docker, containerd, cri-o
+  - options: 
+    - docker (default)
+    - containerd
+    - cri-o
+
+### Examples
+- [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
+
+- [Example 2: Start Kubernetes and specify minikube version, driver and container-runtime](https://github.com/medyagh/setup-minikube#example-2)
+
+- [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
+
+Build image and deploy to Kubernetes on pull request
 
 ## Example 1: 
 #### Start Kubernetes on pull request
