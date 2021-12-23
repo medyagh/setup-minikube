@@ -5384,11 +5384,11 @@ const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
 function setArgs(args) {
     const inputs = [
-        { key: "driver", flag: "--driver" },
-        { key: "container-runtime", flag: "--container-runtime" },
-        { key: "kubernetes-version", flag: "--kubernetes-version" }
+        { key: 'driver', flag: '--driver' },
+        { key: 'container-runtime', flag: '--container-runtime' },
+        { key: 'kubernetes-version', flag: '--kubernetes-version' },
     ];
-    inputs.forEach(input => {
+    inputs.forEach((input) => {
         const value = core.getInput(input.key).toLowerCase();
         if (value !== '') {
             args.push(input.flag, value);
