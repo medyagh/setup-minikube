@@ -22,7 +22,7 @@
   - example: 1.24.0
 
 - driver (optional)
-  - default: auto-select
+  - default: '' (minikube will auto-select)
   - options: 
     - docker
     - none (baremetal)
