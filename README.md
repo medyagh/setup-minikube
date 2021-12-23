@@ -50,10 +50,11 @@
 <details>
       <summary> container-runtime (optional)  </summary>
 <pre>
+    - default: docker
     - options: 
-    - docker (default)
-    - containerd
-    - cri-o
+        - docker
+        - containerd
+        - cri-o
 </pre>
 </details>
 
@@ -68,6 +69,7 @@
   - example: v1.23.1
 </pre>
 </details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
