@@ -11,6 +11,14 @@
       uses: medyagh/setup-minikube@master
 
 ```
+## Examples
+- [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
+
+- [Example 2: Start Kubernetes and specify minikube version, driver and container-runtime](https://github.com/medyagh/setup-minikube#example-2)
+
+- [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
+
+
 
 ## Cofigurable Fields
 - minikube-version (optional)
@@ -40,13 +48,6 @@
     - docker (default)
     - containerd
     - cri-o
-
-## Examples
-- [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
-
-- [Example 2: Start Kubernetes and specify minikube version, driver and container-runtime](https://github.com/medyagh/setup-minikube#example-2)
-
-- [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
 
 ## Example 1: 
 #### Start Kubernetes on pull request
