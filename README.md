@@ -17,6 +17,7 @@
 - [Example 2: Start Kubernetes using all configuration options](https://github.com/medyagh/setup-minikube#example-2)
 
 - [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
+- [Real World Examples](https://github.com/medyagh/setup-minikube#Real-World)
 
 
 
@@ -136,8 +137,10 @@ jobs:
         echo -n "------------------opening the service------------------"
         curl $(minikube service discover --url)/version
 ```
-
-[More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
+## Real World: 
+#### Add your own repo here:
+- [medyagh/test-minikube-example](https://github.com/medyagh/test-minikube-example)
+- [More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
 
 ## About Author
 
