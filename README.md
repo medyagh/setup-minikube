@@ -8,7 +8,7 @@
     steps:
     - name: start minikube
       id: minikube
-      uses: medyagh/setup-minikube@master
+      uses: medyagh/setup-minikube@latest
 
 ```
 ## Examples
