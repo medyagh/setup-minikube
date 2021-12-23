@@ -22,41 +22,51 @@
 
 
 ## Cofigurable Fields
-- minikube-version (optional)
+
+<details>
+  <summary> minikube-version (optional)</summary>
+<pre>
   - default: latest
   - options: 
     - version in format of 'X.X.X'
     - 'latest' for the latest stable release
     - 'HEAD' for the latest development build
   - example: 1.24.0
+</pre>
+</details>
 
-- driver (optional)
+<details>
+  <summary> driver (optional)</summary>
+<pre>
   - default: '' (minikube will auto-select)
   - options: 
     - docker
     - none (baremetal)
     - virtualbox (available on macOS free agents)
-    - also if installed on agent you can also use:
-      - podman (if installed)
-      - parallels 
-      - vmwarefusion
-      - hyperkit
-      - vmware
-      - ssh
-- container-runtime (optional)
-  - description: Choose a specific container-runtime
+    - also possible if installed on self-hosted agent: podman, parallels, vmwarefusion, hyperkit, vmware, ssh
+</pre>
+</details>
+
+<details>
+      <summary> container-runtime (optional)  </summary>
   - options: 
     - docker (default)
     - containerd
     - cri-o
-- kubernetes-version (optional)
-  - default: stable
-  - options:
-    - version in format of 'vX.X.X'
-    - 'stable' for the latest stable release
-    - 'latest' for the latest development build
-  - example: v1.23.1
+</pre>
+</details>
 
+<details>
+      <summary>  kubernetes-version (optional)  </summary>
+<pre>
+   - default: stable
+    - options:
+     - 'stable' for the latest stable Kubernetes version
+     - 'latest' for the Newest Kubernetes version 
+     - 'vX.X.X'
+  - example: v1.23.1
+</pre>
+</details>
 ## Example 1: 
 #### Start Kubernetes on pull request
 
