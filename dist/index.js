@@ -5375,24 +5375,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.downloadMinikube = exports.getDownloadUrl = exports.startMinikube = void 0;
+exports.downloadMinikube = exports.getDownloadUrl = exports.startMinikube = exports.setArgs = void 0;
 const core = __importStar(__webpack_require__(470));
 const exec = __importStar(__webpack_require__(986));
 const tc = __importStar(__webpack_require__(533));
 const os = __importStar(__webpack_require__(87));
 const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
+function setArgs(args) {
+    const inputs = [
+        { key: 'driver', flag: '--driver' },
+        { key: 'container-runtime', flag: '--container-runtime' },
+        { key: 'kubernetes-version', flag: '--kubernetes-version' },
+    ];
+    inputs.forEach((input) => {
+        const value = core.getInput(input.key).toLowerCase();
+        if (value !== '') {
+            args.push(input.flag, value);
+        }
+    });
+}
+exports.setArgs = setArgs;
 function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['start', '--wait', 'all'];
-        const driver = core.getInput('driver').toLowerCase();
-        if (driver !== '') {
-            args.push('--driver', driver);
-        }
-        const containerRuntime = core.getInput('container-runtime').toLowerCase();
-        if (containerRuntime !== '') {
-            args.push('--container-runtime', containerRuntime);
-        }
+        setArgs(args);
         yield exec.exec('minikube', args);
     });
 }

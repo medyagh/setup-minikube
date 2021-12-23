@@ -4,8 +4,8 @@
     "useTabs": false,
     "semi": false,
     "singleQuote": true,
-    "trailingComma": "none",
+    "trailingComma": "es5",
     "bracketSpacing": false,
-    "arrowParens": "avoid",
+    "arrowParens": "always",
     "parser": "typescript"
   }

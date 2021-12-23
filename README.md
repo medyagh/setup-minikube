@@ -14,7 +14,7 @@
 ## Examples
 - [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
 
-- [Example 2: Start Kubernetes and specify minikube version, driver and container-runtime](https://github.com/medyagh/setup-minikube#example-2)
+- [Example 2: Start Kubernetes using all configuration options](https://github.com/medyagh/setup-minikube#example-2)
 
 - [Example 3: Build image and deploy to Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-3)
 
@@ -24,9 +24,9 @@
 - minikube-version (optional)
   - default: latest
   - options: 
-      - version in format of 'X.X.X'
-      - 'latest' for the latest stable release
-      - 'HEAD' for the latest development build
+    - version in format of 'X.X.X'
+    - 'latest' for the latest stable release
+    - 'HEAD' for the latest development build
   - example: 1.24.0
 
 - driver (optional)
@@ -34,7 +34,7 @@
   - options: 
     - docker
     - none (baremetal)
-    - virtualbox (available on macOs free agents)
+    - virtualbox (available on macOS free agents)
     - also if installed on agent you can also use:
       - podman (if installed)
       - parallels 
@@ -48,6 +48,13 @@
     - docker (default)
     - containerd
     - cri-o
+- kubernetes-version (optional)
+  - default: stable
+  - options:
+    - version in format of 'vX.X.X'
+    - 'stable' for the latest stable release
+    - 'latest' for the latest development build
+  - example: v1.23.1
 
 ## Example 1: 
 #### Start Kubernetes on pull request
@@ -70,7 +77,7 @@ jobs:
 ```
 
 ## Example 2
-### Start Kubernetes on pull request and specify minikube version, driver, and container-runtime
+### Start Kubernetes using all configuration options
 
 ```
 name: CI
@@ -87,6 +94,7 @@ jobs:
         minikube-version: 1.24.0
         driver: docker
         container-runtime: containerd
+        kubernetes-version: v1.22.3
       uses: medyagh/setup-minikube@master
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
@@ -131,6 +139,6 @@ jobs:
 
 [More examples](https://github.com/medyagh/setup-minikube/tree/master/examples)
 
-## About Auhtor
+## About Author
 
-Medya Ghazizadeh, Follow me on [twitter](https://twitter.com/medya_dev) for my dev news !
+Medya Ghazizadeh, Follow me on [twitter](https://twitter.com/medya_dev) for my dev news!
