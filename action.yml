@@ -9,16 +9,16 @@ inputs:
     description: 'Choose a specific version of minikube, "latest" for the latest stable build, or "HEAD" for the latest development build'
     required: false
     default: 'latest'
-  action:
-    description: 'minikube command to run, could be start, pause, unpause, stop, status.'
-    required: false
-    default: 'start'
   driver:
     description: 'Choose a specific driver, one of: docker, none, podman, virtualbox, parallels, vmwarefusion, hyperkit, vmware, ssh'
     required: false
     default: ''
   container-runtime:
     description: 'Choose a specific container-runtime, one of: docker, containerd, cri-o'
+    required: false
+    default: ''
+  kubernetes-version:
+    description: 'Choose a specific version of Kubernetes, "stable" for the latest stable build, or "latest" for the latest development build'
     required: false
     default: ''
 runs:

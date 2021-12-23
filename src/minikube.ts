@@ -5,17 +5,24 @@ import * as os from 'os';
 import * as io from '@actions/io';
 import * as path from 'path';
 
+export function setArgs(args: string[]) {
+  const inputs: { key: string, flag: string }[] = [
+    { key: "driver", flag: "--driver" },
+    { key: "container-runtime", flag: "--container-runtime" },
+    { key: "kubernetes-version", flag: "--kubernetes-version" }
+  ];
+  inputs.forEach(input => {
+    const value = core.getInput(input.key).toLowerCase();
+    if (value !== '') {
+      args.push(input.flag, value);
+    }
+  });
+}
+
 export async function startMinikube(): Promise<void> {
-  const args = ['start', '--wait', 'all']
-  const driver = core.getInput('driver').toLowerCase()
-  if (driver !== '') {
-	  args.push('--driver', driver)
-  }
-  const containerRuntime = core.getInput('container-runtime').toLowerCase()
-  if (containerRuntime !== '') {
-	  args.push('--container-runtime', containerRuntime)
-  }
-  await exec.exec('minikube', args)
+  const args = ['start', '--wait', 'all'];
+  setArgs(args);
+  await exec.exec('minikube', args);
 }
 
 export function getDownloadUrl(version: string): string {
