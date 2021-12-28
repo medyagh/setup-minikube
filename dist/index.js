@@ -6,25 +6,6 @@
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,17 +16,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core = __importStar(__nccwpck_require__(186));
+const core_1 = __nccwpck_require__(186);
 const minikube_1 = __nccwpck_require__(968);
 // main thing :)
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield minikube_1.downloadMinikube(core.getInput('minikube-version').toLowerCase());
+            yield minikube_1.downloadMinikube(core_1.getInput('minikube-version').toLowerCase());
             yield minikube_1.startMinikube();
         }
         catch (error) {
-            core.setFailed(error.message);
+            core_1.setFailed(error.message);
         }
     });
 }
@@ -59,25 +40,6 @@ run();
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -89,12 +51,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.downloadMinikube = exports.getDownloadUrl = exports.startMinikube = exports.setArgs = void 0;
-const core = __importStar(__nccwpck_require__(186));
-const exec = __importStar(__nccwpck_require__(514));
-const tc = __importStar(__nccwpck_require__(784));
-const os = __importStar(__nccwpck_require__(37));
-const io = __importStar(__nccwpck_require__(436));
-const path = __importStar(__nccwpck_require__(17));
+const core_1 = __nccwpck_require__(186);
+const exec_1 = __nccwpck_require__(514);
+const tool_cache_1 = __nccwpck_require__(784);
+const os_1 = __nccwpck_require__(37);
+const io_1 = __nccwpck_require__(436);
+const path_1 = __nccwpck_require__(17);
 function setArgs(args) {
     const inputs = [
         { key: 'driver', flag: '--driver' },
@@ -102,7 +64,7 @@ function setArgs(args) {
         { key: 'kubernetes-version', flag: '--kubernetes-version' },
     ];
     inputs.forEach((input) => {
-        const value = core.getInput(input.key).toLowerCase();
+        const value = core_1.getInput(input.key).toLowerCase();
         if (value !== '') {
             args.push(input.flag, value);
         }
@@ -113,12 +75,12 @@ function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['start', '--wait', 'all'];
         setArgs(args);
-        yield exec.exec('minikube', args);
+        yield exec_1.exec('minikube', args);
     });
 }
 exports.startMinikube = startMinikube;
 function getDownloadUrl(version) {
-    const osPlat = os.platform();
+    const osPlat = os_1.platform();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
     const suffix = osPlat === 'win32' ? '.exe' : '';
     switch (version) {
@@ -134,12 +96,12 @@ exports.getDownloadUrl = getDownloadUrl;
 function downloadMinikube(version) {
     return __awaiter(this, void 0, void 0, function* () {
         const url = getDownloadUrl(version);
-        const downloadPath = yield tc.downloadTool(url);
-        const binPath = os.platform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
-        yield io.mkdirP(binPath);
-        yield exec.exec('chmod', ['+x', downloadPath]);
-        yield io.mv(downloadPath, path.join(binPath, 'minikube'));
-        core.addPath(binPath);
+        const downloadPath = yield tool_cache_1.downloadTool(url);
+        const binPath = os_1.platform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
+        yield io_1.mkdirP(binPath);
+        yield exec_1.exec('chmod', ['+x', downloadPath]);
+        yield io_1.mv(downloadPath, path_1.join(binPath, 'minikube'));
+        core_1.addPath(binPath);
     });
 }
 exports.downloadMinikube = downloadMinikube;
