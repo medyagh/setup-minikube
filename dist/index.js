@@ -22,7 +22,9 @@ const minikube_1 = __nccwpck_require__(968);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield minikube_1.downloadMinikube(core_1.getInput('minikube-version').toLowerCase());
+            let minikubeVersion = core_1.getInput('minikube-version').toLowerCase();
+            minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion;
+            yield minikube_1.downloadMinikube(minikubeVersion);
             yield minikube_1.startMinikube();
         }
         catch (error) {
@@ -62,6 +64,9 @@ function setArgs(args) {
         { key: 'driver', flag: '--driver' },
         { key: 'container-runtime', flag: '--container-runtime' },
         { key: 'kubernetes-version', flag: '--kubernetes-version' },
+        { key: 'cpus', flag: '--cpus' },
+        { key: 'memory', flag: '--memory' },
+        { key: 'cni', flag: '--cni' },
     ];
     inputs.forEach((input) => {
         const value = core_1.getInput(input.key).toLowerCase();
