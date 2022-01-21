@@ -4,7 +4,9 @@ import {downloadMinikube, startMinikube} from './minikube'
 // main thing :)
 async function run(): Promise<void> {
   try {
-    await downloadMinikube(getInput('minikube-version').toLowerCase())
+    let minikubeVersion = getInput('minikube-version').toLowerCase()
+    minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion
+    await downloadMinikube(minikubeVersion)
     await startMinikube()
   } catch (error) {
     setFailed(error.message)

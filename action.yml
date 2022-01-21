@@ -21,6 +21,18 @@ inputs:
     description: 'Choose a specific version of Kubernetes, "stable" for the latest stable build, or "latest" for the latest development build'
     required: false
     default: ''
+  cpus:
+    description: 'Number of CPUs allocated to Kubernetes. Use "max" to use the maximum number of CPUs.'
+    required: false
+    default: ''
+  memory:
+    description: 'Amount of RAM to allocate to Kubernetes (format: <number>[<unit>], where unit = b, k, m or g). Use "max" to use the maximum amount of memory.'
+    required: false
+    default: ''
+  cni:
+    description: 'CNI plug-in to use. Valid options: auto, bridge, calico, cilium, flannel, kindnet, or path to a CNI manifest'
+    required: false
+    default: 'auto'
 runs:
   using: 'node12'
   main: 'dist/index.js'

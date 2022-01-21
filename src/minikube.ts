@@ -10,6 +10,9 @@ export function setArgs(args: string[]) {
     {key: 'driver', flag: '--driver'},
     {key: 'container-runtime', flag: '--container-runtime'},
     {key: 'kubernetes-version', flag: '--kubernetes-version'},
+    {key: 'cpus', flag: '--cpus'},
+    {key: 'memory', flag: '--memory'},
+    {key: 'cni', flag: '--cni'},
   ]
   inputs.forEach((input) => {
     const value = getInput(input.key).toLowerCase()
