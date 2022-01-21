@@ -21,7 +21,7 @@
 
 
 
-## Cofigurable Fields
+## Configurable Fields
 
 <details>
   <summary>minikube-version (optional)</summary>
