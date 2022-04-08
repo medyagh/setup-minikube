@@ -103,6 +103,15 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 </details>
 
 <details>
+  <summary>network-plugin (optional)</summary>
+  <pre>
+    - default: auto
+    - options:
+      - cni
+  </pre>
+</details>
+
+<details>
   <summary>cni (optional)</summary>
   <pre>
     - default: '' (auto)
@@ -113,6 +122,19 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
       - flannel
       - kindnet
       - (path to a CNI manifest)
+  </pre>
+</details>
+
+<details>
+  <summary>wait (optional)</summary>
+  <pre>
+    - default: all
+    - options:
+      - comma separated list of Kubernetes components (e.g. apiserver,system_pods,default_sa,apps_running,node_ready,kubelet)
+      - all
+      - none
+      - true
+      - false
   </pre>
 </details>
 

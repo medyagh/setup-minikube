@@ -12,6 +12,7 @@ export const setArgs = (args: string[]) => {
     {key: 'listen-address', flag: '--listen-address'},
     {key: 'memory', flag: '--memory'},
     {key: 'mount-path', flag: '--mount-string'},
+    {key: 'network-plugin', flag: '--network-plugin'},
   ]
   inputs.forEach((input) => {
     const value = getInput(input.key).toLowerCase()
