@@ -13,6 +13,7 @@ export function setArgs(args: string[]) {
     {key: 'cpus', flag: '--cpus'},
     {key: 'memory', flag: '--memory'},
     {key: 'cni', flag: '--cni'},
+    {key: 'extra-config', flag: '--extra-config'},
   ]
   inputs.forEach((input) => {
     const value = getInput(input.key).toLowerCase()
