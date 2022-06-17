@@ -106,6 +106,14 @@
   </pre>
 </details>
 
+<details>
+  <summary>extra-config (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Any extra config fields (see [docs](https://minikube.sigs.k8s.io/docs/handbook/config/#kubernetes-configuration))
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -148,6 +156,7 @@ jobs:
         cpus: 4
         memory: 4000m
         cni: bridge
+        extra-config: 'apiserver.ServiceNodePortRange=1000-10000'
       uses: medyagh/setup-minikube@master
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
