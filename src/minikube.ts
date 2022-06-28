@@ -22,9 +22,26 @@ export function setArgs(args: string[]) {
   })
 }
 
+export async function installCriDocker() {
+  const driver = getInput('driver').toLowerCase()
+  if (driver !== 'none') {
+    return
+  }
+  const urlBase =
+    'https://storage.googleapis.com/setup-minikube/cri-dockerd/v0.2.3/'
+  const binaryDownload = downloadTool(urlBase + 'cri-dockerd')
+  const serviceDownload = downloadTool(urlBase + 'cri-docker.service')
+  const socketDownload = downloadTool(urlBase + 'cri-docker.socket')
+  await exec('chmod', ['+x', await binaryDownload])
+  await mv(await binaryDownload, '/usr/bin/cri-dockerd')
+  await mv(await serviceDownload, '/usr/lib/systemd/system/cri-docker.service')
+  await mv(await socketDownload, '/usr/lib/systemd/system/cri-docker.socket')
+}
+
 export async function startMinikube(): Promise<void> {
   const args = ['start', '--wait', 'all']
   setArgs(args)
+  await installCriDocker()
   await exec('minikube', args)
 }
 
