@@ -9,7 +9,9 @@ async function run(): Promise<void> {
     await downloadMinikube(minikubeVersion)
     await startMinikube()
   } catch (error) {
-    setFailed(error.message)
+    if (error instanceof Error) {
+      setFailed(error.message)
+    }
   }
 }
 
