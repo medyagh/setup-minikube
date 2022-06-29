@@ -54,7 +54,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.downloadMinikube = exports.getDownloadUrl = exports.startMinikube = exports.setArgs = void 0;
+exports.downloadMinikube = exports.getDownloadUrl = exports.startMinikube = exports.installNoneDriverDeps = exports.installCrictl = exports.installConntrackSocat = exports.installCriDocker = exports.setArgs = void 0;
 const core_1 = __nccwpck_require__(186);
 const exec_1 = __nccwpck_require__(514);
 const tool_cache_1 = __nccwpck_require__(784);
@@ -78,10 +78,67 @@ function setArgs(args) {
     });
 }
 exports.setArgs = setArgs;
+function installCriDocker() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const urlBase = 'https://storage.googleapis.com/setup-minikube/cri-dockerd/v0.2.3/';
+        const binaryDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-dockerd');
+        const serviceDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-docker.service');
+        const socketDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-docker.socket');
+        yield (0, exec_1.exec)('chmod', ['+x', yield binaryDownload]);
+        yield (0, exec_1.exec)('sudo', ['mv', yield binaryDownload, '/usr/bin/cri-dockerd']);
+        yield (0, exec_1.exec)('sudo', [
+            'mv',
+            yield serviceDownload,
+            '/usr/lib/systemd/system/cri-docker.service',
+        ]);
+        yield (0, exec_1.exec)('sudo', [
+            'mv',
+            yield socketDownload,
+            '/usr/lib/systemd/system/cri-docker.socket',
+        ]);
+    });
+}
+exports.installCriDocker = installCriDocker;
+function installConntrackSocat() {
+    return __awaiter(this, void 0, void 0, function* () {
+        yield (0, exec_1.exec)('sudo', ['apt-get', 'update', '-qq']);
+        yield (0, exec_1.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
+    });
+}
+exports.installConntrackSocat = installConntrackSocat;
+function installCrictl() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const crictlURL = 'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.17.0/crictl-v1.17.0-linux-amd64.tar.gz';
+        const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
+        yield (0, exec_1.exec)('sudo', [
+            'tar',
+            'zxvf',
+            yield crictlDownload,
+            '-C',
+            '/usr/local/bin',
+        ]);
+    });
+}
+exports.installCrictl = installCrictl;
+function installNoneDriverDeps() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const driver = (0, core_1.getInput)('driver').toLowerCase();
+        if (driver !== 'none') {
+            return;
+        }
+        yield Promise.all([
+            installCriDocker(),
+            installConntrackSocat(),
+            installCrictl(),
+        ]);
+    });
+}
+exports.installNoneDriverDeps = installNoneDriverDeps;
 function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
         const args = ['start', '--wait', 'all'];
         setArgs(args);
+        yield installNoneDriverDeps();
         yield (0, exec_1.exec)('minikube', args);
     });
 }
