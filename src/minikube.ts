@@ -6,6 +6,7 @@ import {mkdirP, mv} from '@actions/io'
 import {join} from 'path'
 
 export function setArgs(args: string[]) {
+  const reservedStartArgs: string[] = args
   const inputs: {key: string; flag: string}[] = [
     {key: 'driver', flag: '--driver'},
     {key: 'container-runtime', flag: '--container-runtime'},
@@ -15,10 +16,20 @@ export function setArgs(args: string[]) {
     {key: 'cni', flag: '--cni'},
   ]
   inputs.forEach((input) => {
+    reservedStartArgs.push(input.key)
     const value = getInput(input.key).toLowerCase()
     if (value !== '') {
       args.push(input.flag, value)
     }
+  })
+
+  const startArgs = getInput('start-args').split('')
+  startArgs.forEach((arg) => {
+    if (reservedStartArgs.indexOf(arg) != -1) {
+      throw new Error(`${arg} is a reserved start-arg`)
+    }
+
+    args.push(arg)
   })
 }
 
@@ -76,6 +87,11 @@ export async function startMinikube(): Promise<void> {
   const args = ['start', '--wait', 'all']
   setArgs(args)
   await installNoneDriverDeps()
+  await exec('minikube', args)
+}
+
+export async function stopMinikube(): Promise<void> {
+  const args = ['stop', '--cancel-scheduled', '--all']
   await exec('minikube', args)
 }
 

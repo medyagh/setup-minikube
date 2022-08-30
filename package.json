@@ -1,6 +1,6 @@
 {
   "name": "minikube-action",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "private": true,
   "description": "start a kubernetes cluster in github actions",
   "main": "lib/main.js",
@@ -9,7 +9,7 @@
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
-    "pack": "ncc build",
+    "pack": "ncc build src/main.ts -o dist -d && ncc build src/cleanup.ts -o dist/cleanup -d",
     "test": "jest",
     "all": "npm run build && npm run format && npm run lint && npm run pack && npm test"
   },

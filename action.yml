@@ -1,8 +1,8 @@
 name: 'setup-minikube'
-description: 'test your app against real Kubernetes.'
+description: 'Test your app against real Kubernetes.'
 author: 'Medya Gh'
 branding:
-  icon: 'box'  
+  icon: 'box'
   color: 'blue'
 inputs:
   minikube-version:
@@ -33,6 +33,11 @@ inputs:
     description: 'CNI plug-in to use. Valid options: auto, bridge, calico, cilium, flannel, kindnet, or path to a CNI manifest'
     required: false
     default: 'auto'
+  start-args:
+    description: 'Additional arguments to append to minikube start command'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
+  post: 'dist/cleanup/index.js'
