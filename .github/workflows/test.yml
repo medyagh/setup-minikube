@@ -23,5 +23,18 @@ jobs:
     - uses: ./
       with:
         addons: ingress
+
+    # Test that nginx ingress has been enabled
     - run: |
         minikube addons list | grep 'ingress ' | grep enabled
+  test-extraOptions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          extra-config: 'kubelet.max-pods=10'
+
+      # Test that minikube max-pods extraConfig has been set
+      - run: |
+          cat ~/.minikube/profiles/minikube/config.json | jq '.KubernetesConfig.ExtraOptions[0].Key' | grep max-pods
