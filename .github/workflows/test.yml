@@ -23,3 +23,5 @@ jobs:
     - uses: ./
       with:
         addons: ingress
+    - run: |
+        minikube addons list | grep 'ingress ' | grep enabled
