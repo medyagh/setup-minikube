@@ -37,6 +37,10 @@ inputs:
     description: 'Choose optional addons to install. Valid options: ingress, gcp-auth, registry ...'
     required: false
     default: ''
+  extra-config:
+    description: 'Extra configuration (--extra-config) to pass into "minikube start".'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'

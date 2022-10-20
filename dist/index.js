@@ -70,6 +70,7 @@ function setArgs(args) {
         { key: 'memory', flag: '--memory' },
         { key: 'cni', flag: '--cni' },
         { key: 'addons', flag: '--addons' },
+        { key: 'extra-config', flag: '--extra-config' },
     ];
     inputs.forEach((input) => {
         const value = (0, core_1.getInput)(input.key).toLowerCase();

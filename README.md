@@ -148,6 +148,14 @@
   </pre>
 </details>
 
+<details>
+  <summary>extra-config (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Any extra config fields (see [docs](https://minikube.sigs.k8s.io/docs/handbook/config/#kubernetes-configuration))
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -181,6 +189,7 @@ jobs:
     name: job1
     steps:
     - name: start minikube
+      uses: medyagh/setup-minikube@master
       id: minikube
       with:
         minikube-version: 1.24.0
@@ -190,7 +199,8 @@ jobs:
         cpus: 4
         memory: 4000m
         cni: bridge
-      uses: medyagh/setup-minikube@master
+        addons: registry,ingress
+        extra-config: 'kubelet.max-pods=10'
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
       run: kubectl get pods -A
