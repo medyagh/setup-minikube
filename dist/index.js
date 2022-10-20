@@ -69,6 +69,7 @@ function setArgs(args) {
         { key: 'cpus', flag: '--cpus' },
         { key: 'memory', flag: '--memory' },
         { key: 'cni', flag: '--cni' },
+        { key: 'addons', flag: '--addons' },
     ];
     inputs.forEach((input) => {
         const value = (0, core_1.getInput)(input.key).toLowerCase();
