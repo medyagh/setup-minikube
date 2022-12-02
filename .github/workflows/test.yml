@@ -1,6 +1,8 @@
 name: "build-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
+    types:
+      [ opened, synchronize, reopened ]
   push:
     branches:
       - master
@@ -10,14 +12,29 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - run: |
         npm install
         npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - uses: ./
-      with: 
-        milliseconds: 1000
+      with:
+        addons: ingress
+
+    # Test that nginx ingress has been enabled
+    - run: |
+        minikube addons list | grep 'ingress ' | grep enabled
+  test-extraOptions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          extra-config: 'kubelet.max-pods=10'
+
+      # Test that minikube max-pods extraConfig has been set
+      - run: |
+          cat ~/.minikube/profiles/minikube/config.json | jq '.KubernetesConfig.ExtraOptions[0].Key' | grep max-pods

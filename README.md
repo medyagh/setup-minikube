@@ -106,6 +106,56 @@
   </pre>
 </details>
 
+<details>
+  <summary>addons (optional)</summary>
+  <pre>
+    - default: ''
+    - options:
+      - ambassador
+      - auto-pause
+      - csi-hostpath-driver
+      - dashboard
+      - default-storageclass
+      - efk
+      - freshpod
+      - gcp-auth
+      - gvisor
+      - headlamp
+      - helm-tiller
+      - inaccel
+      - ingress
+      - ingress-dns
+      - istio
+      - istio-provisioner
+      - kong
+      - kubevirt
+      - logviewer
+      - metallb
+      - metrics-server
+      - nvidia-driver-installer
+      - nvidia-gpu-device-plugin
+      - olm
+      - pod-security-policy
+      - portainer
+      - registry
+      - registry-aliases
+      - registry-creds
+      - storage-provisioner
+      - storage-provisioner-gluster
+      - volumesnapshots
+      - (minikube addons list)
+    - example: ingress,registry
+  </pre>
+</details>
+
+<details>
+  <summary>extra-config (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Any extra config fields (see [docs](https://minikube.sigs.k8s.io/docs/handbook/config/#kubernetes-configuration))
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -139,6 +189,7 @@ jobs:
     name: job1
     steps:
     - name: start minikube
+      uses: medyagh/setup-minikube@master
       id: minikube
       with:
         minikube-version: 1.24.0
@@ -148,7 +199,8 @@ jobs:
         cpus: 4
         memory: 4000m
         cni: bridge
-      uses: medyagh/setup-minikube@master
+        addons: registry,ingress
+        extra-config: 'kubelet.max-pods=10'
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
       run: kubectl get pods -A
