@@ -15,6 +15,7 @@ export function setArgs(args: string[]) {
     {key: 'cni', flag: '--cni'},
     {key: 'addons', flag: '--addons'},
     {key: 'extra-config', flag: '--extra-config'},
+    {key: 'listen-address', flag: '--listen-address'},
   ]
   inputs.forEach((input) => {
     const value = getInput(input.key).toLowerCase()

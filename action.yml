@@ -41,6 +41,10 @@ inputs:
     description: 'Extra configuration (--extra-config) to pass into "minikube start".'
     required: false
     default: ''
+  listen-address:
+    description: 'IP Address to use to expose ports (docker and podman driver only)'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
