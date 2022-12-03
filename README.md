@@ -160,7 +160,7 @@
   <summary>listen-address (optional)</summary>
   <pre>
     - default: ''
-    - value: The apiserver listening port
+    - value: IP Address to use to expose ports (docker and podman driver only)
   </pre>
 </details>
 

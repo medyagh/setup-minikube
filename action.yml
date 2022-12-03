@@ -42,7 +42,7 @@ inputs:
     required: false
     default: ''
   listen-address:
-    description: 'The apiserver listening port'
+    description: 'IP Address to use to expose ports (docker and podman driver only)'
     required: false
     default: ''
 runs:
