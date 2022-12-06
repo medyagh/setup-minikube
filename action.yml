@@ -5,6 +5,10 @@ branding:
   icon: 'box'
   color: 'blue'
 inputs:
+  cache:
+    description: 'Cache ISO, kicbase, and preloads to speed up starting minikube'
+    required: false
+    default: true
   minikube-version:
     description: 'Choose a specific version of minikube, "latest" for the latest stable build, or "HEAD" for the latest development build'
     required: false
