@@ -96,6 +96,8 @@ function getCacheKey(name, minikubeVersion) {
     }
     return cacheKey;
 }
+// getInput gets the specified value from the users workflow yaml
+// if the value is empty the default value it returned
 function getInput(name, defaultValue) {
     const value = (0, core_1.getInput)(name).toLowerCase();
     return value !== '' ? value : defaultValue;
