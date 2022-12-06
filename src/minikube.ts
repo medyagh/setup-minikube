@@ -77,7 +77,7 @@ async function installNoneDriverDeps(): Promise<void> {
 }
 
 export async function startMinikube(): Promise<void> {
-  const args = ['start']
+  const args = ['start', '--wait', 'all']
   setArgs(args)
   const cacheHits = await restoreCaches()
   await installNoneDriverDeps()

@@ -240,7 +240,7 @@ function installNoneDriverDeps() {
 }
 function startMinikube() {
     return __awaiter(this, void 0, void 0, function* () {
-        const args = ['start'];
+        const args = ['start', '--wait', 'all'];
         setArgs(args);
         const cacheHits = yield (0, cache_1.restoreCaches)();
         yield installNoneDriverDeps();
