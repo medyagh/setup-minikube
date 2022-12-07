@@ -15,6 +15,16 @@ module.exports = {
     '@typescript-eslint',
   ],
   'rules': {
+    "comma-dangle": ["error", {
+      "arrays": "only-multiline",
+      "objects": "only-multiline",
+      "imports": "only-multiline",
+      "exports": "only-multiline",
+      "functions": "never"
+    }],
+    "indent": ["error", 2, {
+      "SwitchCase": 1
+    }],
     "require-jsdoc" : 0,
     "semi": 0
   },

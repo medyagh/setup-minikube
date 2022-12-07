@@ -11,6 +11,16 @@
       uses: medyagh/setup-minikube@latest
 
 ```
+
+## Caching
+
+By default setup-minikube caches the ISO, kicbase, and preload using GitHub Action Cache, if you'd like to disable this caching add the following to your workflow file.
+```
+- uses: medyagh/setup-minikube@latest
+  with:
+    cache: false
+```
+
 ## Examples
 - [Example 1: Start Kubernetes on pull request](https://github.com/medyagh/setup-minikube#example-1)
 

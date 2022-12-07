@@ -1,6 +1,7 @@
 import {getInput, setFailed} from '@actions/core'
 
 import {downloadMinikube, startMinikube} from './minikube'
+
 // main thing :)
 async function run(): Promise<void> {
   try {

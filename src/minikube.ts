@@ -1,11 +1,13 @@
 import {addPath, getInput} from '@actions/core'
 import {exec} from '@actions/exec'
 import {downloadTool} from '@actions/tool-cache'
-import {platform as getPlatform} from 'os'
 import {mkdirP, mv} from '@actions/io'
+import {platform as getPlatform} from 'os'
 import {join} from 'path'
 
-export function setArgs(args: string[]) {
+import {restoreCaches, saveCaches} from './cache'
+
+function setArgs(args: string[]) {
   const inputs: {key: string; flag: string}[] = [
     {key: 'driver', flag: '--driver'},
     {key: 'container-runtime', flag: '--container-runtime'},
@@ -25,7 +27,7 @@ export function setArgs(args: string[]) {
   })
 }
 
-export async function installCriDocker(): Promise<void> {
+async function installCriDocker(): Promise<void> {
   const urlBase =
     'https://storage.googleapis.com/setup-minikube/cri-dockerd/v0.2.3/'
   const binaryDownload = downloadTool(urlBase + 'cri-dockerd')
@@ -45,12 +47,12 @@ export async function installCriDocker(): Promise<void> {
   ])
 }
 
-export async function installConntrackSocat(): Promise<void> {
+async function installConntrackSocat(): Promise<void> {
   await exec('sudo', ['apt-get', 'update', '-qq'])
   await exec('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat'])
 }
 
-export async function installCrictl(): Promise<void> {
+async function installCrictl(): Promise<void> {
   const crictlURL =
     'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.17.0/crictl-v1.17.0-linux-amd64.tar.gz'
   const crictlDownload = downloadTool(crictlURL)
@@ -63,7 +65,7 @@ export async function installCrictl(): Promise<void> {
   ])
 }
 
-export async function installNoneDriverDeps(): Promise<void> {
+async function installNoneDriverDeps(): Promise<void> {
   const driver = getInput('driver').toLowerCase()
   if (driver !== 'none') {
     return
@@ -78,8 +80,10 @@ export async function installNoneDriverDeps(): Promise<void> {
 export async function startMinikube(): Promise<void> {
   const args = ['start', '--wait', 'all']
   setArgs(args)
+  const cacheHits = await restoreCaches()
   await installNoneDriverDeps()
   await exec('minikube', args)
+  await saveCaches(cacheHits)
 }
 
 export function getDownloadUrl(version: string): string {
