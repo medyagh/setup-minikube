@@ -188,7 +188,7 @@ jobs:
     steps:
     - name: start minikube
       id: minikube
-      uses: medyagh/setup-minikube@master
+      uses: medyagh/setup-minikube@latest
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
       run: kubectl get pods -A
@@ -207,7 +207,7 @@ jobs:
     name: job1
     steps:
     - name: start minikube
-      uses: medyagh/setup-minikube@master
+      uses: medyagh/setup-minikube@latest
       id: minikube
       with:
         minikube-version: 1.24.0
@@ -238,7 +238,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Start minikube
-      uses: medyagh/setup-minikube@master
+      uses: medyagh/setup-minikube@latest
       # now you can run kubectl to see the pods in the cluster
     - name: Try the cluster!
       run: kubectl get pods -A
