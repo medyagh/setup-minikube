@@ -204,6 +204,15 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
   </pre>
 </details>
 
+<details>
+  <summary>insecure-registry (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Any container registry address which is insecure
+    - example: localhost:5000,10.0.0.0/24
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -250,6 +259,7 @@ jobs:
         addons: registry,ingress
         extra-config: 'kubelet.max-pods=10'
         mount-path: '/Users/user1/test-files:/testdata'
+        insecure-registry: localhost:5000,10.0.0.0/24
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
       run: kubectl get pods -A

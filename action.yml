@@ -61,6 +61,10 @@ inputs:
     description: 'comma separated list of Kubernetes components to verify and wait for after starting a cluster. defaults to "apiserver,system_pods", available options: "apiserver,system_pods,default_sa,apps_running,node_ready,kubelet". Other acceptable values are "all" or "none", "true" and "false"'
     required: false
     default: 'all'
+  insecure-registry:
+    description: 'Enable insecure communication with the given registries'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'
