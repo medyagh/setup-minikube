@@ -105,7 +105,7 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 <details>
   <summary>cni (optional)</summary>
   <pre>
-    - default: auto
+    - default: '' (auto)
     - options:
       - bridge
       - calico
@@ -174,6 +174,14 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
   </pre>
 </details>
 
+<details>
+  <summary>mount-path (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Mount the source directory from your host into the target directory inside the cluster (format: <source directory>:<target directory>)
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -219,6 +227,7 @@ jobs:
         cni: bridge
         addons: registry,ingress
         extra-config: 'kubelet.max-pods=10'
+        mount-path: '/Users/user1/test-files:/testdata'
     # now you can run kubectl to see the pods in the cluster
     - name: kubectl
       run: kubectl get pods -A

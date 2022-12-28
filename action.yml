@@ -36,7 +36,7 @@ inputs:
   cni:
     description: 'CNI plug-in to use. Valid options: auto, bridge, calico, cilium, flannel, kindnet, or path to a CNI manifest'
     required: false
-    default: 'auto'
+    default: ''
   addons:
     description: 'Choose optional addons to install. Valid options: ingress, gcp-auth, registry ...'
     required: false
@@ -47,6 +47,10 @@ inputs:
     default: ''
   listen-address:
     description: 'IP Address to use to expose ports (docker and podman driver only)'
+    required: false
+    default: ''
+  mount-path:
+    description: 'Mount the source directory from your host into the target directory inside the cluster (format: <source directory>:<target directory>)'
     required: false
     default: ''
 runs:
