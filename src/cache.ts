@@ -13,7 +13,7 @@ type CacheHits = {
   preload: boolean
 }
 
-export async function restoreCaches(): Promise<CacheHits> {
+export const restoreCaches = async (): Promise<CacheHits> => {
   const cacheHits: CacheHits = {iso: true, kic: true, preload: true}
   if (!useCache()) {
     return cacheHits
@@ -28,7 +28,7 @@ export async function restoreCaches(): Promise<CacheHits> {
   return cacheHits
 }
 
-async function getMinikubeVersion(): Promise<string> {
+export const getMinikubeVersion = async (): Promise<string> => {
   let version = ''
   const options: any = {}
   options.listeners = {
@@ -40,7 +40,7 @@ async function getMinikubeVersion(): Promise<string> {
   return version.trim()
 }
 
-export async function saveCaches(cacheHits: CacheHits): Promise<void> {
+export const saveCaches = async (cacheHits: CacheHits): Promise<void> => {
   if (!useCache()) {
     return
   }
@@ -52,21 +52,21 @@ export async function saveCaches(cacheHits: CacheHits): Promise<void> {
   await kicCache
 }
 
-async function restoreCache(
+const restoreCache = async (
   name: string,
   minikubeVersion: string
-): Promise<string | undefined> {
+): Promise<string | undefined> => {
   return restoreCacheAction(
     getCachePaths(name),
     getCacheKey(name, minikubeVersion)
   )
 }
 
-async function saveCache(
+const saveCache = async (
   name: string,
   cacheHit: boolean,
   minikubeVersion: string
-): Promise<void> {
+): Promise<void> => {
   if (cacheHit) {
     return
   }
@@ -80,11 +80,11 @@ async function saveCache(
   }
 }
 
-function getCachePaths(folderName: string): string[] {
+const getCachePaths = (folderName: string): string[] => {
   return [join(homedir(), '.minikube', 'cache', folderName)]
 }
 
-function getCacheKey(name: string, minikubeVersion: string): string {
+const getCacheKey = (name: string, minikubeVersion: string): string => {
   let cacheKey = `${name}-${minikubeVersion}-${arch()}`
   if (name === 'preloaded-tarball') {
     const kubernetesVersion = getInput('kubernetes-version', 'stable')
@@ -96,11 +96,9 @@ function getCacheKey(name: string, minikubeVersion: string): string {
 
 // getInput gets the specified value from the users workflow yaml
 // if the value is empty the default value it returned
-function getInput(name: string, defaultValue: string): string {
+const getInput = (name: string, defaultValue: string): string => {
   const value = getInputAction(name).toLowerCase()
   return value !== '' ? value : defaultValue
 }
 
-function useCache(): boolean {
-  return getInputAction('cache').toLowerCase() === 'true'
-}
+const useCache = (): boolean => getInputAction('cache').toLowerCase() === 'true'
