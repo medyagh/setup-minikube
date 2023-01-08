@@ -18,7 +18,8 @@ export const setArgs = (args: string[]) => {
     {key: 'wait', flag: '--wait'},
   ]
   inputs.forEach((input) => {
-    const value = getInput(input.key).toLowerCase()
+    // If key is feature-gates, we shound not convert to lower case
+    const value = input.key === 'feature-gates' ? getInput(input.key) : getInput(input.key).toLowerCase()
     if (value !== '') {
       args.push(input.flag, value)
     }
