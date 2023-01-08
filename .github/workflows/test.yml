@@ -55,7 +55,8 @@ jobs:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - uses: ./
         with:
-          feature-gates: 'DownwardAPIHugePages=true'
+          feature-gates: 'DefaultPodTopologySpread=false'
+          kubernetes-version: v1.24.9
       # Should be fine
       - run: |
           cat ~/.minikube/profiles/minikube/config.json
