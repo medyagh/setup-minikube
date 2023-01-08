@@ -58,5 +58,6 @@ jobs:
           feature-gates: 'DownwardAPIHugePages=true'
       # Should be fine
       - run: |
+          cat ~/.minikube/profiles/minikube/config.json
           cat ~/.minikube/profiles/minikube/config.json | grep DownwardAPIHugePages
 
