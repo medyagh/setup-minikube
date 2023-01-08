@@ -49,3 +49,12 @@ jobs:
       # Test that minikube max-pods extraConfig has been set
       - run: |
           minikube ssh cat /lib/systemd/system/docker.service | grep 192.168.0.0/16
+  test-featureGatesOptions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: ./
+        with:
+          feature-gates: 'DownwardAPIHugePages=true'
+      - run: |
+          cat ~/.minikube/profiles/minikube/config.json | grep DownwardAPIHugePages

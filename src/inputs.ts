@@ -8,6 +8,7 @@ export const setArgs = (args: string[]) => {
     {key: 'cpus', flag: '--cpus'},
     {key: 'driver', flag: '--driver'},
     {key: 'extra-config', flag: '--extra-config'},
+    {key: 'feature-gates', flag: '--feature-gates'},
     {key: 'insecure-registry', flag: '--insecure-registry'},
     {key: 'kubernetes-version', flag: '--kubernetes-version'},
     {key: 'listen-address', flag: '--listen-address'},
