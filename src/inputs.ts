@@ -20,7 +20,8 @@ export const setArgs = (args: string[]) => {
   inputs.forEach((input) => {
     // If key is feature-gates, we shound not convert to lower case
     const value = (input.key === 'feature-gates') ?
-      getInput(input.key) : getInput(input.key).toLowerCase()
+      getInput(input.key) :
+      getInput(input.key).toLowerCase()
     if (value !== '') {
       args.push(input.flag, value)
     }
