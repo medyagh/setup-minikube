@@ -55,10 +55,10 @@ jobs:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
       - uses: ./
         with:
-          feature-gates: 'DefaultPodTopologySpread=false'
-          kubernetes-version: v1.24.9
+          feature-gates: 'ValidatingAdmissionPolicy=true'
+          extra-config: 'apiserver.runtime-config=admissionregistration.k8s.io/v1alpha1'
+          kubernetes-version: v1.26.0
       # Should be fine
       - run: |
-          cat ~/.minikube/profiles/minikube/config.json
-          cat ~/.minikube/profiles/minikube/config.json | grep DownwardAPIHugePages
+          cat ~/.minikube/profiles/minikube/config.json | grep ValidatingAdmissionPolicy
 
