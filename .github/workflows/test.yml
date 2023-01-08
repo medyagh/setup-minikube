@@ -58,6 +58,7 @@ jobs:
           feature-gates: 'ValidatingAdmissionPolicy=true'
           extra-config: 'apiserver.runtime-config=admissionregistration.k8s.io/v1alpha1'
           kubernetes-version: v1.26.0
+          container-runtime: containerd
       # Should be fine
       - run: |
           cat ~/.minikube/profiles/minikube/config.json | grep ValidatingAdmissionPolicy
