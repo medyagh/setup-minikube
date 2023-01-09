@@ -12,14 +12,14 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
     - run: |
         npm install
         npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
     - uses: ./
       with:
         addons: ingress
@@ -30,7 +30,7 @@ jobs:
   test-extraOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       - uses: ./
         with:
           extra-config: 'kubelet.max-pods=10'
