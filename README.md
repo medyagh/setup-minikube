@@ -6,9 +6,9 @@
 ## Basic Usage
 ```
     steps:
-    - name: start minikube
-      id: minikube
-      uses: medyagh/setup-minikube@latest
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
 
 ```
 
@@ -221,6 +221,15 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
   </pre>
 </details>
 
+<details>
+  <summary>start-args (opptional)</summary>
+  <pre>
+    - default: ''
+    - value: Any flags you would regularly pass into minikube via CLI
+    - example: --addons ingress --delete-on-failure
+  </pre>
+</details>
+
 ## Example 1: 
 #### Start Kubernetes on pull request
 
@@ -233,12 +242,12 @@ jobs:
     runs-on: ubuntu-latest
     name: job1
     steps:
-    - name: start minikube
-      id: minikube
-      uses: medyagh/setup-minikube@latest
-    # now you can run kubectl to see the pods in the cluster
-    - name: kubectl
-      run: kubectl get pods -A
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
+      # now you can run kubectl to see the pods in the cluster
+      - name: kubectl
+        run: kubectl get pods -A
 ```
 
 ## Example 2
@@ -253,25 +262,25 @@ jobs:
     runs-on: ubuntu-latest
     name: job1
     steps:
-    - name: start minikube
-      uses: medyagh/setup-minikube@latest
-      id: minikube
-      with:
-        minikube-version: 1.24.0
-        driver: docker
-        container-runtime: containerd
-        kubernetes-version: v1.22.3
-        cpus: 4
-        memory: 4000m
-        cni: bridge
-        addons: registry,ingress
-        extra-config: 'kubelet.max-pods=10'
-        feature-gates: 'DownwardAPIHugePages=true'
-        mount-path: '/Users/user1/test-files:/testdata'
-        insecure-registry: localhost:5000,10.0.0.0/24
-    # now you can run kubectl to see the pods in the cluster
-    - name: kubectl
-      run: kubectl get pods -A
+      - name: start minikube
+        uses: medyagh/setup-minikube@latest
+        id: minikube
+        with:
+          minikube-version: 1.24.0
+          driver: docker
+          container-runtime: containerd
+          kubernetes-version: v1.22.3
+          cpus: 4
+          memory: 4000m
+          cni: bridge
+          addons: registry,ingress
+          extra-config: 'kubelet.max-pods=10'
+          feature-gates: 'DownwardAPIHugePages=true'
+          mount-path: '/Users/user1/test-files:/testdata'
+          insecure-registry: localhost:5000,10.0.0.0/24
+      # now you can run kubectl to see the pods in the cluster
+      - name: kubectl
+        run: kubectl get pods -A
 ```
 
 ## Example 3:
@@ -286,28 +295,28 @@ jobs:
     runs-on: ubuntu-latest
     name: build discover and deploy
     steps:
-    - uses: actions/checkout@v2
-    - name: Start minikube
-      uses: medyagh/setup-minikube@latest
+      - uses: actions/checkout@v2
+      - name: Start minikube
+        uses: medyagh/setup-minikube@latest
       # now you can run kubectl to see the pods in the cluster
-    - name: Try the cluster!
-      run: kubectl get pods -A
-    - name: Build image
-      run: |
-        export SHELL=/bin/bash
-        eval $(minikube -p minikube docker-env)
-        make build-image
-        echo -n "verifying images:"
-        docker images
-    - name: Deploy to minikube
-      run:
-        kubectl apply -f deploy/deploy-minikube.yaml
-    - name: Test service URLs
-      run: |
-        minikube service list
-        minikube service discover --url
-        echo -n "------------------opening the service------------------"
-        curl $(minikube service discover --url)/version
+      - name: Try the cluster!
+        run: kubectl get pods -A
+      - name: Build image
+        run: |
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
+          make build-image
+          echo -n "verifying images:"
+          docker images
+      - name: Deploy to minikube
+        run: |
+          kubectl apply -f deploy/deploy-minikube.yaml
+      - name: Test service URLs
+        run: |
+          minikube service list
+          minikube service discover --url
+          echo -n "------------------opening the service------------------"
+          curl $(minikube service discover --url)/version
 ```
 ## Real World: 
 #### Add your own repo here:

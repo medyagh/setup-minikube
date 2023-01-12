@@ -69,6 +69,10 @@ inputs:
     description: 'Enable insecure communication with the given registries'
     required: false
     default: ''
+  start-args:
+    description: 'Any flags you would regularly pass into minikube via CLI'
+    required: false
+    default: ''
 runs:
   using: 'node16'
   main: 'dist/index.js'

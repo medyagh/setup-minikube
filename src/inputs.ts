@@ -18,16 +18,16 @@ export const setArgs = (args: string[]) => {
     {key: 'wait', flag: '--wait'},
   ]
   inputs.forEach((input) => {
-    // If key is feature-gates, we shound not convert to lower case
-    let value = getInput(input.key).toLowerCase()
-    if (input.key === 'feature-gates') {
-      value = getInput(input.key)
-    }
+    const value = getInput(input.key)
     if (value !== '') {
       args.push(input.flag, value)
     }
   })
   if (getInput('mount-path') !== '') {
     args.push('--mount')
+  }
+  const startArgs = getInput('start-args')
+  if (startArgs !== '') {
+    args.push(startArgs)
   }
 }
