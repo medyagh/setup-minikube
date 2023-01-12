@@ -226,7 +226,7 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
   <pre>
     - default: ''
     - value: Any flags you would regularly pass into minikube via CLI
-    - example: --delete-on-failure --network mynetwork
+    - example: --delete-on-failure --subnet 192.168.50.0
   </pre>
 </details>
 
@@ -280,7 +280,7 @@ jobs:
           mount-path: '/Users/user1/test-files:/testdata'
           wait: false
           insecure-registry: 'localhost:5000,10.0.0.0/24'
-          start-args: '--delete-on-failure --network mynetwork'
+          start-args: '--delete-on-failure --subnet 192.168.50.0'
       # now you can run kubectl to see the pods in the cluster
       - name: kubectl
         run: kubectl get pods -A
