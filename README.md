@@ -222,11 +222,11 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 </details>
 
 <details>
-  <summary>start-args (opptional)</summary>
+  <summary>start-args (optional)</summary>
   <pre>
     - default: ''
     - value: Any flags you would regularly pass into minikube via CLI
-    - example: --addons ingress --delete-on-failure
+    - example: --delete-on-failure --network mynetwork
   </pre>
 </details>
 
@@ -266,6 +266,7 @@ jobs:
         uses: medyagh/setup-minikube@latest
         id: minikube
         with:
+          cache: false
           minikube-version: 1.24.0
           driver: docker
           container-runtime: containerd
@@ -277,7 +278,9 @@ jobs:
           extra-config: 'kubelet.max-pods=10'
           feature-gates: 'DownwardAPIHugePages=true'
           mount-path: '/Users/user1/test-files:/testdata'
-          insecure-registry: localhost:5000,10.0.0.0/24
+          wait: false
+          insecure-registry: 'localhost:5000,10.0.0.0/24'
+          start-args: '--delete-on-failure --network mynetwork'
       # now you can run kubectl to see the pods in the cluster
       - name: kubectl
         run: kubectl get pods -A
