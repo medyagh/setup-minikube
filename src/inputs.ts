@@ -8,6 +8,7 @@ export const setArgs = (args: string[]) => {
     {key: 'cpus', flag: '--cpus'},
     {key: 'driver', flag: '--driver'},
     {key: 'extra-config', flag: '--extra-config'},
+    {key: 'feature-gates', flag: '--feature-gates'},
     {key: 'insecure-registry', flag: '--insecure-registry'},
     {key: 'kubernetes-version', flag: '--kubernetes-version'},
     {key: 'listen-address', flag: '--listen-address'},
@@ -17,7 +18,11 @@ export const setArgs = (args: string[]) => {
     {key: 'wait', flag: '--wait'},
   ]
   inputs.forEach((input) => {
-    const value = getInput(input.key).toLowerCase()
+    // If key is feature-gates, we shound not convert to lower case
+    let value = getInput(input.key).toLowerCase()
+    if (input.key === 'feature-gates') {
+      value = getInput(input.key)
+    }
     if (value !== '') {
       args.push(input.flag, value)
     }

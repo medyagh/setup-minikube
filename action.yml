@@ -49,6 +49,10 @@ inputs:
     description: 'Extra configuration (--extra-config) to pass into "minikube start".'
     required: false
     default: ''
+  feature-gates:
+    description: 'Enabling feature gates (--feature-gates) to pass into "minikube start" in a format it accepts it.'
+    required: false
+    default: ''
   listen-address:
     description: 'IP Address to use to expose ports (docker and podman driver only)'
     required: false

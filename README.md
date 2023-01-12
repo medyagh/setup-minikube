@@ -189,6 +189,14 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 </details>
 
 <details>
+  <summary>feature-gates (optional)</summary>
+  <pre>
+    - default: ''
+    - value: Enable feature gates in API service (see [docs](https://minikube.sigs.k8s.io/docs/handbook/config/#enabling-feature-gates))
+  </pre>
+</details>
+
+<details>
   <summary>listen-address (optional)</summary>
   <pre>
     - default: ''
@@ -258,6 +266,7 @@ jobs:
         cni: bridge
         addons: registry,ingress
         extra-config: 'kubelet.max-pods=10'
+        feature-gates: 'DownwardAPIHugePages=true'
         mount-path: '/Users/user1/test-files:/testdata'
         insecure-registry: localhost:5000,10.0.0.0/24
     # now you can run kubectl to see the pods in the cluster
