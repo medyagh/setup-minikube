@@ -5,7 +5,7 @@ import {setArgs} from './inputs'
 import {installNoneDriverDeps} from './none-driver'
 
 export const startMinikube = async (): Promise<void> => {
-  const args = ['start', '--wait', 'all']
+  const args = ['start']
   setArgs(args)
   const cacheHits = await restoreCaches()
   await installNoneDriverDeps()

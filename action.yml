@@ -33,6 +33,10 @@ inputs:
     description: 'Amount of RAM to allocate to Kubernetes (format: <number>[<unit>], where unit = b, k, m or g). Use "max" to use the maximum amount of memory.'
     required: false
     default: ''
+  network-plugin:
+    description: 'Kubelet network plug-in to use (default: auto). Valid options: cni'
+    required: false
+    default: ''
   cni:
     description: 'CNI plug-in to use. Valid options: auto, bridge, calico, cilium, flannel, kindnet, or path to a CNI manifest'
     required: false
@@ -53,6 +57,10 @@ inputs:
     description: 'Mount the source directory from your host into the target directory inside the cluster (format: <source directory>:<target directory>)'
     required: false
     default: ''
+  wait:
+    description: 'comma separated list of Kubernetes components to verify and wait for after starting a cluster. defaults to "apiserver,system_pods", available options: "apiserver,system_pods,default_sa,apps_running,node_ready,kubelet". Other acceptable values are "all" or "none", "true" and "false"'
+    required: false
+    default: 'all'
 runs:
   using: 'node16'
   main: 'dist/index.js'
