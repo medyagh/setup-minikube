@@ -7,26 +7,24 @@ on: # rebuild any PRs and main branch changes
     branches:
       - master
       - 'releases/*'
-
 jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
-    - run: |
-        npm install
-        npm run all
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - run: |
+          npm install
+          npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
-    - uses: ./
-      with:
-        addons: ingress
-
-    # Test that nginx ingress has been enabled
-    - run: |
-        minikube addons list | grep 'ingress ' | grep enabled
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
+      - uses: ./
+        with:
+          addons: ingress
+      # Test that nginx ingress has been enabled
+      - run: |
+          minikube addons list | grep 'ingress ' | grep enabled
   test-extraOptions:
     runs-on: ubuntu-latest
     steps:
@@ -34,25 +32,23 @@ jobs:
       - uses: ./
         with:
           extra-config: 'kubelet.max-pods=10'
-
       # Test that minikube max-pods extraConfig has been set
       - run: |
           cat ~/.minikube/profiles/minikube/config.json | jq '.KubernetesConfig.ExtraOptions[0].Key' | grep max-pods
   test-insecure-registry:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       - uses: ./
         with:
           insecure-registry: '192.168.0.0/16'
-
       # Test that minikube max-pods extraConfig has been set
       - run: |
           minikube ssh cat /lib/systemd/system/docker.service | grep 192.168.0.0/16
   test-featureGatesOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c
       - uses: ./
         with:
           feature-gates: 'ValidatingAdmissionPolicy=true'
