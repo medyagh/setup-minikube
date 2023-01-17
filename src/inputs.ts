@@ -28,6 +28,6 @@ export const setArgs = (args: string[]) => {
   }
   const startArgs = getInput('start-args')
   if (startArgs !== '') {
-    args.push(startArgs)
+    args.push(...startArgs.split(' '))
   }
 }

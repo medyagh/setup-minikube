@@ -70,7 +70,7 @@ inputs:
     required: false
     default: ''
   start-args:
-    description: 'Any flags you would regularly pass into minikube via CLI'
+    description: 'Any flags you would regularly pass into minikube via CLI, seperated by space'
     required: false
     default: ''
 runs:
