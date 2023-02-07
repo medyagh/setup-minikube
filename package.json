@@ -37,7 +37,7 @@
     "@actions/tool-cache": "^2.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.2.5",
+    "@types/jest": "^29.4.0",
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
@@ -46,7 +46,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-github": "^4.6.0",
     "eslint-plugin-jest": "^27.2.1",
-    "jest": "^29.3.1",
+    "jest": "^29.4.2",
     "jest-circus": "^29.3.1",
     "js-yaml": "^4.1.0",
     "prettier": "^2.8.3",
