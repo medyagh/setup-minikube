@@ -248,30 +248,40 @@ exports.installNoneDriverDeps = void 0;
 const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
 const tool_cache_1 = __nccwpck_require__(7784);
-const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
-    const urlBase = 'https://storage.googleapis.com/setup-minikube/cri-dockerd/v0.2.3/';
-    const binaryDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-dockerd');
-    const serviceDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-docker.service');
-    const socketDownload = (0, tool_cache_1.downloadTool)(urlBase + 'cri-docker.socket');
-    yield (0, exec_1.exec)('chmod', ['+x', yield binaryDownload]);
-    yield (0, exec_1.exec)('sudo', ['mv', yield binaryDownload, '/usr/bin/cri-dockerd']);
+const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
+    const cniPluginsURL = 'https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz';
+    const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
+    yield (0, exec_1.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
     yield (0, exec_1.exec)('sudo', [
-        'mv',
-        yield serviceDownload,
-        '/usr/lib/systemd/system/cri-docker.service',
-    ]);
-    yield (0, exec_1.exec)('sudo', [
-        'mv',
-        yield socketDownload,
-        '/usr/lib/systemd/system/cri-docker.socket',
+        'tar',
+        'zxvf',
+        yield cniPluginsDownload,
+        '-C',
+        '/opt/cni/bin',
     ]);
 });
-const installConntrackSocat = () => __awaiter(void 0, void 0, void 0, function* () {
+const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
+    let codename = '';
+    const options = {
+        listeners: {
+            stdout: (data) => {
+                codename += data.toString();
+            },
+        },
+    };
+    yield (0, exec_1.exec)('lsb_release', ['--short', '--codename'], options);
+    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.1/cri-dockerd_0.3.1.3-0.ubuntu-${codename}_amd64.deb`;
+    const criDockerDownload = (0, tool_cache_1.downloadTool)(criDockerURL);
+    yield (0, exec_1.exec)('sudo', ['dpkg', '--install', yield criDockerDownload]);
+});
+const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, exec_1.exec)('sudo', ['apt-get', 'update', '-qq']);
     yield (0, exec_1.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
+    // Need to wait for the dpkg frontend lock to install cri-docker
+    yield installCriDocker();
 });
 const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
-    const crictlURL = 'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.17.0/crictl-v1.17.0-linux-amd64.tar.gz';
+    const crictlURL = 'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.26.0/crictl-v1.26.0-linux-amd64.tar.gz';
     const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
     yield (0, exec_1.exec)('sudo', [
         'tar',
@@ -281,15 +291,20 @@ const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
         '/usr/local/bin',
     ]);
 });
+const makeCniDirectoryReadable = () => __awaiter(void 0, void 0, void 0, function* () {
+    // created by podman package with 700 root:root
+    yield (0, exec_1.exec)('sudo', ['chmod', '755', '/etc/cni/net.d']);
+});
 const installNoneDriverDeps = () => __awaiter(void 0, void 0, void 0, function* () {
     const driver = (0, core_1.getInput)('driver').toLowerCase();
     if (driver !== 'none') {
         return;
     }
     yield Promise.all([
-        installCriDocker(),
-        installConntrackSocat(),
+        installCniPlugins(),
+        installConntrackSocatCriDocker(),
         installCrictl(),
+        makeCniDirectoryReadable(),
     ]);
 });
 exports.installNoneDriverDeps = installNoneDriverDeps;
