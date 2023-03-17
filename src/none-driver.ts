@@ -2,9 +2,12 @@ import {getInput} from '@actions/core'
 import {exec} from '@actions/exec'
 import {downloadTool} from '@actions/tool-cache'
 
+const cniPluginsVersion = 'v1.2.0'
+const criDockerVersion = 'v0.3.1'
+const crictlVersion = 'v1.26.1'
+
 const installCniPlugins = async (): Promise<void> => {
-  const cniPluginsURL =
-    'https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz'
+  const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`
   const cniPluginsDownload = downloadTool(cniPluginsURL)
   await exec('sudo', ['mkdir', '-p', '/opt/cni/bin'])
   await exec('sudo', [
@@ -26,8 +29,10 @@ const installCriDocker = async (): Promise<void> => {
     },
   }
   await exec('lsb_release', ['--short', '--codename'], options)
-  const criDockerURL =
-    `https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.1/cri-dockerd_0.3.1.3-0.ubuntu-${codename}_amd64.deb`
+  const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(
+    /^v/,
+    ''
+  )}.3-0.ubuntu-${codename}_amd64.deb`
   const criDockerDownload = downloadTool(criDockerURL)
   await exec('sudo', ['dpkg', '--install', await criDockerDownload])
 }
@@ -40,8 +45,7 @@ const installConntrackSocatCriDocker = async (): Promise<void> => {
 }
 
 const installCrictl = async (): Promise<void> => {
-  const crictlURL =
-    'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.26.0/crictl-v1.26.0-linux-amd64.tar.gz'
+  const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`
   const crictlDownload = downloadTool(crictlURL)
   await exec('sudo', [
     'tar',
