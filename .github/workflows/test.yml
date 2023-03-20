@@ -13,8 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@24cb9080177205b6e8c946b17badbe402adc938f
       - run: |
-          npm install
+          npm ci
           npm run all
+          __tests__/verify-no-unstaged-changes.sh
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
