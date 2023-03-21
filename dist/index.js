@@ -248,8 +248,11 @@ exports.installNoneDriverDeps = void 0;
 const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
 const tool_cache_1 = __nccwpck_require__(7784);
+const cniPluginsVersion = 'v1.2.0';
+const criDockerVersion = 'v0.3.1';
+const crictlVersion = 'v1.26.1';
 const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
-    const cniPluginsURL = 'https://github.com/containernetworking/plugins/releases/download/v1.2.0/cni-plugins-linux-amd64-v1.2.0.tgz';
+    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`;
     const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
     yield (0, exec_1.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
     yield (0, exec_1.exec)('sudo', [
@@ -270,7 +273,7 @@ const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
         },
     };
     yield (0, exec_1.exec)('lsb_release', ['--short', '--codename'], options);
-    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.1/cri-dockerd_0.3.1.3-0.ubuntu-${codename}_amd64.deb`;
+    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(/^v/, '')}.3-0.ubuntu-${codename}_amd64.deb`;
     const criDockerDownload = (0, tool_cache_1.downloadTool)(criDockerURL);
     yield (0, exec_1.exec)('sudo', ['dpkg', '--install', yield criDockerDownload]);
 });
@@ -281,7 +284,7 @@ const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, f
     yield installCriDocker();
 });
 const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
-    const crictlURL = 'https://github.com/kubernetes-sigs/cri-tools/releases/download/v1.26.0/crictl-v1.26.0-linux-amd64.tar.gz';
+    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`;
     const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
     yield (0, exec_1.exec)('sudo', [
         'tar',
