@@ -20,6 +20,7 @@ exports.saveCaches = exports.getMinikubeVersion = exports.restoreCaches = void 0
 const cache_1 = __nccwpck_require__(7799);
 const core_1 = __nccwpck_require__(2186);
 const exec_1 = __nccwpck_require__(1514);
+const fs_1 = __nccwpck_require__(7147);
 const os_1 = __nccwpck_require__(2037);
 const path_1 = __nccwpck_require__(1017);
 const restoreCaches = () => __awaiter(void 0, void 0, void 0, function* () {
@@ -54,11 +55,11 @@ const saveCaches = (cacheHits) => __awaiter(void 0, void 0, void 0, function* ()
         return;
     }
     const minikubeVersion = yield (0, exports.getMinikubeVersion)();
-    const isoCache = saveCache('iso', cacheHits.iso, minikubeVersion);
-    const kicCache = saveCache('kic', cacheHits.kic, minikubeVersion);
-    yield saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion);
-    yield isoCache;
-    yield kicCache;
+    yield Promise.all([
+        saveCache('iso', cacheHits.iso, minikubeVersion),
+        saveCache('kic', cacheHits.kic, minikubeVersion),
+        saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion),
+    ]);
 });
 exports.saveCaches = saveCaches;
 const restoreCache = (name, minikubeVersion) => __awaiter(void 0, void 0, void 0, function* () {
@@ -68,8 +69,12 @@ const saveCache = (name, cacheHit, minikubeVersion) => __awaiter(void 0, void 0,
     if (cacheHit) {
         return;
     }
+    const cachePaths = getCachePaths(name);
+    if (!(0, fs_1.existsSync)(cachePaths[0])) {
+        return;
+    }
     try {
-        yield (0, cache_1.saveCache)(getCachePaths(name), getCacheKey(name, minikubeVersion));
+        yield (0, cache_1.saveCache)(cachePaths, getCacheKey(name, minikubeVersion));
     }
     catch (error) {
         console.log(name + error);
