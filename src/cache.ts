@@ -4,6 +4,7 @@ import {
 } from '@actions/cache'
 import {getInput as getInputAction} from '@actions/core'
 import {exec} from '@actions/exec'
+import {existsSync} from 'fs'
 import {arch, homedir} from 'os'
 import {join} from 'path'
 
@@ -45,11 +46,11 @@ export const saveCaches = async (cacheHits: CacheHits): Promise<void> => {
     return
   }
   const minikubeVersion = await getMinikubeVersion()
-  const isoCache = saveCache('iso', cacheHits.iso, minikubeVersion)
-  const kicCache = saveCache('kic', cacheHits.kic, minikubeVersion)
-  await saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion)
-  await isoCache
-  await kicCache
+  await Promise.all([
+    saveCache('iso', cacheHits.iso, minikubeVersion),
+    saveCache('kic', cacheHits.kic, minikubeVersion),
+    saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion),
+  ])
 }
 
 const restoreCache = async (
@@ -70,11 +71,12 @@ const saveCache = async (
   if (cacheHit) {
     return
   }
+  const cachePaths = getCachePaths(name)
+  if (!existsSync(cachePaths[0])) {
+    return
+  }
   try {
-    await saveCacheAction(
-      getCachePaths(name),
-      getCacheKey(name, minikubeVersion)
-    )
+    await saveCacheAction(cachePaths, getCacheKey(name, minikubeVersion))
   } catch (error) {
     console.log(name + error)
   }
