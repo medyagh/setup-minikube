@@ -145,7 +145,8 @@ const downloadMinikube = (version) => __awaiter(void 0, void 0, void 0, function
     const binPath = (0, os_1.platform)() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
     yield (0, io_1.mkdirP)(binPath);
     yield (0, exec_1.exec)('chmod', ['+x', downloadPath]);
-    yield (0, io_1.mv)(downloadPath, (0, path_1.join)(binPath, 'minikube'));
+    yield (0, io_1.cp)(downloadPath, (0, path_1.join)(binPath, 'minikube'));
+    yield (0, io_1.rmRF)(downloadPath);
     (0, core_1.addPath)(binPath);
 });
 exports.downloadMinikube = downloadMinikube;
