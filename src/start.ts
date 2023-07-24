@@ -1,4 +1,5 @@
 import {exec} from '@actions/exec'
+import {getInput} from '@actions/core'
 
 import {restoreCaches, saveCaches} from './cache'
 import {setArgs} from './inputs'
@@ -9,6 +10,7 @@ export const startMinikube = async (): Promise<void> => {
   setArgs(args)
   const cacheHits = await restoreCaches()
   await installNoneDriverDeps()
-  await exec('minikube', args)
+  const binPath = getInput('bin-path')
+  await exec('minikube', args, {cwd: binPath})
   await saveCaches(cacheHits)
 }
