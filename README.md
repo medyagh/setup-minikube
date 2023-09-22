@@ -213,7 +213,7 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 </details>
 
 <details>
-  <summary>bin-path (optional)</summary>
+  <summary>install-path (optional)</summary>
   <pre>
     - default: ''
     - value: Path where the executables (minikube) will get installed. Useful when having multiple self-hosted runners on one machine.

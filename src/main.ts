@@ -8,8 +8,8 @@ const run = async (): Promise<void> => {
   try {
     let minikubeVersion = getInput('minikube-version').toLowerCase()
     minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion
-    const binPath = getInput('bin-path');
-    await downloadMinikube(minikubeVersion, binPath)
+    const installPath = getInput('install-path')
+    await downloadMinikube(minikubeVersion, installPath)
     await startMinikube()
   } catch (error) {
     if (error instanceof Error) {

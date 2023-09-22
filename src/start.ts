@@ -10,7 +10,7 @@ export const startMinikube = async (): Promise<void> => {
   setArgs(args)
   const cacheHits = await restoreCaches()
   await installNoneDriverDeps()
-  const binPath = getInput('bin-path')
-  await exec('minikube', args, {cwd: binPath})
+  const installPath = getInput('install-path')
+  await exec('minikube', args, {cwd: installPath})
   await saveCaches(cacheHits)
 }
