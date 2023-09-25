@@ -11,7 +11,7 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - run: |
           npm ci
           npm run all
@@ -19,7 +19,7 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: ./
         with:
           addons: ingress
@@ -29,7 +29,7 @@ jobs:
   test-extraOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: ./
         with:
           extra-config: 'kubelet.max-pods=10'
@@ -39,7 +39,7 @@ jobs:
   test-insecure-registry:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: ./
         with:
           insecure-registry: '192.168.0.0/16'
@@ -49,7 +49,7 @@ jobs:
   test-featureGatesOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: ./
         with:
           feature-gates: 'ValidatingAdmissionPolicy=true'
@@ -62,7 +62,7 @@ jobs:
   test-none-driver:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac
+      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
       - uses: ./
         with:
           driver: none
