@@ -139,17 +139,18 @@ const getDownloadURL = (version) => {
     }
 };
 exports.getDownloadURL = getDownloadURL;
-const downloadMinikube = (version, binPath) => __awaiter(void 0, void 0, void 0, function* () {
+const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, void 0, function* () {
     const url = (0, exports.getDownloadURL)(version);
     const downloadPath = yield (0, tool_cache_1.downloadTool)(url);
-    if (!binPath) {
-        binPath = (0, os_1.platform)() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
+    if (!installPath) {
+        installPath =
+            (0, os_1.platform)() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
     }
-    yield (0, io_1.mkdirP)(binPath);
+    yield (0, io_1.mkdirP)(installPath);
     yield (0, exec_1.exec)('chmod', ['+x', downloadPath]);
-    yield (0, io_1.cp)(downloadPath, (0, path_1.join)(binPath, 'minikube'));
+    yield (0, io_1.cp)(downloadPath, (0, path_1.join)(installPath, 'minikube'));
     yield (0, io_1.rmRF)(downloadPath);
-    (0, core_1.addPath)(binPath);
+    (0, core_1.addPath)(installPath);
 });
 exports.downloadMinikube = downloadMinikube;
 
@@ -223,8 +224,8 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let minikubeVersion = (0, core_1.getInput)('minikube-version').toLowerCase();
         minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion;
-        const binPath = (0, core_1.getInput)('bin-path');
-        yield (0, download_1.downloadMinikube)(minikubeVersion, binPath);
+        const installPath = (0, core_1.getInput)('install-path');
+        yield (0, download_1.downloadMinikube)(minikubeVersion, installPath);
         yield (0, start_1.startMinikube)();
     }
     catch (error) {
@@ -350,8 +351,8 @@ const startMinikube = () => __awaiter(void 0, void 0, void 0, function* () {
     (0, inputs_1.setArgs)(args);
     const cacheHits = yield (0, cache_1.restoreCaches)();
     yield (0, none_driver_1.installNoneDriverDeps)();
-    const binPath = (0, core_1.getInput)('bin-path');
-    yield (0, exec_1.exec)('minikube', args, { cwd: binPath });
+    const installPath = (0, core_1.getInput)('install-path');
+    yield (0, exec_1.exec)('minikube', args, { cwd: installPath });
     yield (0, cache_1.saveCaches)(cacheHits);
 });
 exports.startMinikube = startMinikube;
