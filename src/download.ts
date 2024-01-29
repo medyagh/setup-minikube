@@ -19,14 +19,19 @@ export const getDownloadURL = (version: string): string => {
   }
 }
 
-export const downloadMinikube = async (version: string): Promise<void> => {
+export const downloadMinikube = async (
+  version: string,
+  installPath?: string
+): Promise<void> => {
   const url = getDownloadURL(version)
   const downloadPath = await downloadTool(url)
-  const binPath =
-    getPlatform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin'
-  await mkdirP(binPath)
+  if (!installPath) {
+    installPath =
+      getPlatform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin'
+  }
+  await mkdirP(installPath)
   await exec('chmod', ['+x', downloadPath])
-  await cp(downloadPath, join(binPath, 'minikube'))
+  await cp(downloadPath, join(installPath, 'minikube'))
   await rmRF(downloadPath)
-  addPath(binPath)
+  addPath(installPath)
 }
