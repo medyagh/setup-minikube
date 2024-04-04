@@ -5,6 +5,10 @@ branding:
   icon: 'box'
   color: 'blue'
 inputs:
+  start:
+    description: 'Start minikube after install is complete'
+    required: false
+    default: true
   cache:
     description: 'Cache ISO, kicbase, and preloads to speed up starting minikube'
     required: false
