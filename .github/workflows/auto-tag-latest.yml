@@ -1,0 +1,13 @@
+name: "auto-tag-latest"
+on:
+  release:
+    types: [published]
+jobs:
+  auto-tag-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
+      - run: |
+          git push --delete origin latest
+          git tag latest ${{ github.ref_name }}
+          git push origin latest
