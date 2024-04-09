@@ -226,7 +226,9 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion;
         const installPath = (0, core_1.getInput)('install-path');
         yield (0, download_1.downloadMinikube)(minikubeVersion, installPath);
-        yield (0, start_1.startMinikube)();
+        if ((0, core_1.getInput)('start').toLowerCase() === 'true') {
+            yield (0, start_1.startMinikube)();
+        }
     }
     catch (error) {
         if (error instanceof Error) {

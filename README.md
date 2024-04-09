@@ -34,6 +34,16 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 ## Configurable Fields
 
 <details>
+  <summary>start (optional)</summary>
+  <pre>
+    - default: true
+    - options:
+      - true
+      - false
+  </pre>
+</details>
+
+<details>
   <summary>minikube-version (optional)</summary>
   <pre>
     - default: latest
