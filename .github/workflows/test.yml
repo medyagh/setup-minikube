@@ -69,3 +69,15 @@ jobs:
       - uses: ./
         with:
           driver: none
+      - run: |
+          kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
+      # Test basic networking and DNS resolution
+      - run: |
+          kubectl run \
+            --attach \
+            --image=docker.io/busybox \
+            --restart=Never \
+            --rm \
+            nslookup \
+            -- \
+            nslookup kubernetes.default.svc.cluster.local
