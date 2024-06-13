@@ -127,18 +127,40 @@ const os_1 = __nccwpck_require__(2037);
 const path_1 = __nccwpck_require__(1017);
 const getDownloadURL = (version) => {
     const osPlat = (0, os_1.platform)();
+    const osArch = getMinikubeArch();
     const platform = osPlat === 'win32' ? 'windows' : osPlat;
     const suffix = osPlat === 'win32' ? '.exe' : '';
     switch (version) {
         case 'latest':
-            return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-amd64${suffix}`;
+            return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-${osArch}${suffix}`;
         case 'head':
-            return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-amd64${suffix}`;
+            return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-${osArch}${suffix}`;
         default:
-            return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-amd64${suffix}`;
+            return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-${osArch}${suffix}`;
     }
 };
 exports.getDownloadURL = getDownloadURL;
+const getMinikubeArch = () => {
+    switch ((0, os_1.arch)()) {
+        case 'x64':
+            return 'amd64';
+            break;
+        case 'arm64':
+            return 'arm64';
+            break;
+        case 'arm':
+            return 'arm';
+            break;
+        case 's390x':
+            return 's390x';
+            break;
+        case 'ppc64':
+            return 'ppc64le';
+            break;
+        default:
+            throw new Error(`Machine is of arch ${(0, os_1.arch)()}, which isn't supported by minikube.`);
+    }
+};
 const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, void 0, function* () {
     const url = (0, exports.getDownloadURL)(version);
     const downloadPath = yield (0, tool_cache_1.downloadTool)(url);
