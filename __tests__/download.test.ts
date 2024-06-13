@@ -5,62 +5,188 @@ import {getDownloadURL} from '../src/download'
 jest.mock('os')
 const mockedOS = jest.mocked(os)
 
-test('getDownloadURL Unix latest', () => {
-  mockedOS.platform.mockReturnValue('linux')
+test('getDownloadURL Linux', () => {
+  const tests = [
+    {
+      arch: 'x64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm64',
+    },
+    {
+      arch: 'arm',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-arm',
+    },
+    {
+      arch: 's390x',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-s390x',
+    },
+    {
+      arch: 'ppc64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-ppc64le',
+    },
+    {
+      arch: 'x64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-linux-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-linux-arm64',
+    },
+    {
+      arch: 'arm',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-linux-arm',
+    },
+    {
+      arch: 's390x',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-linux-s390x',
+    },
+    {
+      arch: 'ppc64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-linux-ppc64le',
+    },
+    {
+      arch: 'x64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-arm64',
+    },
+    {
+      arch: 'arm',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-arm',
+    },
+    {
+      arch: 's390x',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-s390x',
+    },
+    {
+      arch: 'ppc64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-ppc64le',
+    },
+  ]
 
-  const url = getDownloadURL('latest')
+  for (const tc of tests) {
+    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.platform.mockReturnValue('linux')
 
-  expect(url).toBe(
-    'https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64'
-  )
+    const url = getDownloadURL(tc.version)
+
+    expect(url).toBe(tc.expected)
+  }
 })
 
-test('getDownloadURL Windows latest', () => {
-  mockedOS.platform.mockReturnValue('win32')
+test('getDownloadURL macOS', () => {
+  const tests = [
+    {
+      arch: 'x64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-darwin-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-darwin-arm64',
+    },
+    {
+      arch: 'x64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-darwin-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-darwin-arm64',
+    },
+    {
+      arch: 'x64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-darwin-amd64',
+    },
+    {
+      arch: 'arm64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-darwin-arm64',
+    },
+  ]
 
-  const url = getDownloadURL('latest')
+  for (const tc of tests) {
+    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.platform.mockReturnValue('darwin')
 
-  expect(url).toBe(
-    'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe'
-  )
+    const url = getDownloadURL(tc.version)
+
+    expect(url).toBe(tc.expected)
+  }
 })
 
-test('getDownloadURL Unix head', () => {
-  mockedOS.platform.mockReturnValue('linux')
+test('getDownloadURL Windows', () => {
+  const tests = [
+    {
+      arch: 'x64',
+      version: 'latest',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/latest/download/minikube-windows-amd64.exe',
+    },
+    {
+      arch: 'x64',
+      version: 'head',
+      expected:
+        'https://storage.googleapis.com/minikube-builds/master/minikube-windows-amd64.exe',
+    },
+    {
+      arch: 'x64',
+      version: '1.28.0',
+      expected:
+        'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-windows-amd64.exe',
+    },
+  ]
 
-  const url = getDownloadURL('head')
+  for (const tc of tests) {
+    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.platform.mockReturnValue('win32')
 
-  expect(url).toBe(
-    'https://storage.googleapis.com/minikube-builds/master/minikube-linux-amd64'
-  )
-})
+    const url = getDownloadURL(tc.version)
 
-test('getDownloadURL Windows head', () => {
-  mockedOS.platform.mockReturnValue('win32')
-
-  const url = getDownloadURL('head')
-
-  expect(url).toBe(
-    'https://storage.googleapis.com/minikube-builds/master/minikube-windows-amd64.exe'
-  )
-})
-
-test('getDownloadURL Unix version', () => {
-  mockedOS.platform.mockReturnValue('linux')
-
-  const url = getDownloadURL('1.28.0')
-
-  expect(url).toBe(
-    'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-linux-amd64'
-  )
-})
-
-test('getDownloadURL Windows version', () => {
-  mockedOS.platform.mockReturnValue('win32')
-
-  const url = getDownloadURL('1.28.0')
-
-  expect(url).toBe(
-    'https://github.com/kubernetes/minikube/releases/download/v1.28.0/minikube-windows-amd64.exe'
-  )
+    expect(url).toBe(tc.expected)
+  }
 })
