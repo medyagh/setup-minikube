@@ -23,6 +23,13 @@ const exec_1 = __nccwpck_require__(1514);
 const fs_1 = __nccwpck_require__(7147);
 const os_1 = __nccwpck_require__(2037);
 const path_1 = __nccwpck_require__(1017);
+// Catch and log any unhandled exceptions. These exceptions can leak out of the
+// uploadChunk method in @actions/toolkit when a failed upload closes the file
+// descriptor causing any in-process reads to throw an uncaught exception.
+// Instead of failing this action, just warn.
+process.on('uncaughtException', (e) => {
+    (0, core_1.info)(`[warning]${e.message}`);
+});
 const restoreCaches = () => __awaiter(void 0, void 0, void 0, function* () {
     const cacheHits = { iso: true, kic: true, preload: true };
     if (!useCache()) {
