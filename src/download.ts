@@ -2,7 +2,7 @@ import {addPath} from '@actions/core'
 import {exec} from '@actions/exec'
 import {mkdirP, cp, rmRF} from '@actions/io'
 import {downloadTool} from '@actions/tool-cache'
-import {arch, platform as getPlatform} from 'os'
+import {arch, homedir, platform as getPlatform} from 'os'
 import {join} from 'path'
 
 export const getDownloadURL = (version: string): string => {
@@ -51,8 +51,7 @@ export const downloadMinikube = async (
   const url = getDownloadURL(version)
   const downloadPath = await downloadTool(url)
   if (!installPath) {
-    installPath =
-      getPlatform() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin'
+    installPath = join(homedir(), 'bin')
   }
   await mkdirP(installPath)
   await exec('chmod', ['+x', downloadPath])
