@@ -2,11 +2,19 @@ import {
   restoreCache as restoreCacheAction,
   saveCache as saveCacheAction,
 } from '@actions/cache'
-import {getInput as getInputAction} from '@actions/core'
+import {info, getInput as getInputAction} from '@actions/core'
 import {exec} from '@actions/exec'
 import {existsSync} from 'fs'
 import {arch, homedir} from 'os'
 import {join} from 'path'
+
+// Catch and log any unhandled exceptions. These exceptions can leak out of the
+// uploadChunk method in @actions/toolkit when a failed upload closes the file
+// descriptor causing any in-process reads to throw an uncaught exception.
+// Instead of failing this action, just warn.
+process.on('uncaughtException', (e) => {
+  info(`[warning]${e.message}`)
+})
 
 type CacheHits = {
   iso: boolean
