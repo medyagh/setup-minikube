@@ -165,8 +165,7 @@ const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, voi
     const url = (0, exports.getDownloadURL)(version);
     const downloadPath = yield (0, tool_cache_1.downloadTool)(url);
     if (!installPath) {
-        installPath =
-            (0, os_1.platform)() === 'darwin' ? '/Users/runner/bin' : '/home/runner/bin';
+        installPath = (0, path_1.join)((0, os_1.homedir)(), 'bin');
     }
     yield (0, io_1.mkdirP)(installPath);
     yield (0, exec_1.exec)('chmod', ['+x', downloadPath]);
