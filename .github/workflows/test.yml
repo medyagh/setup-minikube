@@ -88,7 +88,6 @@ jobs:
       - run: |
           sudo /bin/launchctl kickstart -kp system/com.apple.NetworkSharing
           hostname
-          VBoxManage --version
           sysctl hw.physicalcpu hw.logicalcpu
           brew install qemu
           brew install socket_vmnet
