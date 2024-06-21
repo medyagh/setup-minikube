@@ -81,11 +81,11 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-  test-qemu-macos:
+  test-macos-qemu2:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-      -run: |
+      - run: |
           sudo /bin/launchctl kickstart -kp system/com.apple.NetworkSharing
           hostname
           VBoxManage --version
@@ -96,7 +96,7 @@ jobs:
           HOMEBREW=$(which brew) && sudo ${HOMEBREW} services start socket_vmnet
       - uses: ./
         with:
-          driver: qemu
+          driver: qemu2
       - run: |
           kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
       # Test basic networking and DNS resolution
