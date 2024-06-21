@@ -85,14 +85,11 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
-      - name: fix DHCP leases file
-        shell: bash
-        run: |
+      -run: |
           sudo /bin/launchctl kickstart -kp system/com.apple.NetworkSharing
           hostname
           VBoxManage --version
           sysctl hw.physicalcpu hw.logicalcpu
-      -run: |
           brew install qemu
           brew install socket_vmnet
           brew tap homebrew/services
