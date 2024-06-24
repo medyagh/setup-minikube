@@ -316,7 +316,9 @@ jobs:
     runs-on: ubuntu-latest
     name: build discover and deploy
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          repository: medyagh/local-dev-example-with-minikube
       - name: Start minikube
         uses: medyagh/setup-minikube@latest
       # now you can run kubectl to see the pods in the cluster
@@ -324,20 +326,17 @@ jobs:
         run: kubectl get pods -A
       - name: Build image
         run: |
-          export SHELL=/bin/bash
-          eval $(minikube -p minikube docker-env)
-          make build-image
-          echo -n "verifying images:"
-          docker images
+          minikube image build -t local/devex:v1 .
       - name: Deploy to minikube
         run: |
-          kubectl apply -f deploy/deploy-minikube.yaml
+          kubectl apply -f deploy/k8s.yaml
+          kubectl wait --for=condition=ready pod -l app=local-devex
       - name: Test service URLs
         run: |
           minikube service list
-          minikube service discover --url
+          minikube service local-devex-svc --url
           echo -n "------------------opening the service------------------"
-          curl $(minikube service discover --url)/version
+          curl $(minikube service local-devex-svc --url)/version
 ```
 ## Real World: 
 #### Add your own repo here:
