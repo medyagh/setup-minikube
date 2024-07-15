@@ -82,7 +82,7 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-podman-driver:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Install Podman
         shell: bash
