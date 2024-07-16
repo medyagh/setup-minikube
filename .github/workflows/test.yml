@@ -118,13 +118,14 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-macos-docker-driver:
-    runs-on: macos-12
+    runs-on: macos-15
     steps:
       - name: setup docker
         shell: bash
         run: |
           brew install kubernetes-cli
           brew install docker
+          brew install colima
           colima start
       - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
       - uses: ./
