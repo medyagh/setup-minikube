@@ -117,3 +117,28 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
+  test-macos-docker-driver:
+    runs-on: macos-12
+    steps:
+      - name: setup docker
+        shell: bash
+        run: |
+          brew install kubernetes-cli
+          brew install docker
+          colima start
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
+      - uses: ./
+        with:
+          driver: docker
+      - run: |
+          kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
+      # Test basic networking and DNS resolution
+      - run: |
+          kubectl run \
+            --attach \
+            --image=docker.io/busybox \
+            --restart=Never \
+            --rm \
+            nslookup \
+            -- \
+            nslookup kubernetes.default.svc.cluster.local
