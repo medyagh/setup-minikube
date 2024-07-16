@@ -118,7 +118,7 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-macos-docker-driver:
-    runs-on: macos-15
+    runs-on: macos-14
     steps:
       - name: setup docker
         shell: bash
