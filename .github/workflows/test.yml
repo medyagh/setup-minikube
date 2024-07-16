@@ -3,6 +3,9 @@ on: # rebuild any PRs and main branch changes
   pull_request:
     types:
       [ opened, synchronize, reopened ]
+  schedule:
+    # every 4 hours
+    - cron: "0 */4 * * *"
   push:
     branches:
       - master
