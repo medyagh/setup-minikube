@@ -157,6 +157,7 @@ jobs:
       - uses: ./
         with:
           driver: qemu
+          start-args: '--wait-timeout=15m'
       - run: |
           kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
       # Test basic networking and DNS resolution
