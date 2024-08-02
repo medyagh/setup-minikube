@@ -1,4 +1,4 @@
-import {getInput} from '@actions/core'
+import { getInput } from '@actions/core';
 
 export const setArgs = (args: string[]) => {
   const inputs: {key: string; flag: string}[] = [
@@ -16,6 +16,7 @@ export const setArgs = (args: string[]) => {
     {key: 'mount-path', flag: '--mount-string'},
     {key: 'network-plugin', flag: '--network-plugin'},
     {key: 'wait', flag: '--wait'},
+    {key: 'hyperv-virtual-switch', flag: '--hyperv-virtual-switch'}
   ]
   inputs.forEach((input) => {
     const value = getInput(input.key)
