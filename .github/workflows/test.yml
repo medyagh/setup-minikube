@@ -145,7 +145,7 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-test-macos-vfkit:
+  test-macos-vfkit-driver:
     runs-on: macos-14
     steps:
       - name: setup vfkit
