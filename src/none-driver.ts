@@ -30,6 +30,14 @@ const installCriDocker = async (): Promise<void> => {
     },
   }
   await exec('lsb_release', ['--short', '--codename'], options)
+  codename = codename.trim()
+
+  // Check if the codename is one of the expected values
+  // because Cri-dockerd doesnt support "noble" yet
+  if (!['bionic', 'focal', 'jammy'].includes(codename)) {
+    codename = 'jammy'
+  }
+
   const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(
     /^v/,
     ''
