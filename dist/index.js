@@ -320,7 +320,7 @@ const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, exec_1.exec)('lsb_release', ['--short', '--codename'], options);
     codename = codename.trim();
     // Check if the codename is one of the expected values
-    // because Cri-dockerd doesnt support "noble" yet
+    // because Cri-dockerd doesnt support "noble" yet, we will default to "jammy"
     if (!['bionic', 'focal', 'jammy'].includes(codename)) {
         codename = 'jammy';
     }

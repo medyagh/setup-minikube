@@ -33,7 +33,7 @@ const installCriDocker = async (): Promise<void> => {
   codename = codename.trim()
 
   // Check if the codename is one of the expected values
-  // because Cri-dockerd doesnt support "noble" yet
+  // because Cri-dockerd doesnt support "noble" yet, we will default to "jammy"
   if (!['bionic', 'focal', 'jammy'].includes(codename)) {
     codename = 'jammy'
   }
