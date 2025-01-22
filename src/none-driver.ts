@@ -2,9 +2,10 @@ import {getInput} from '@actions/core'
 import {exec} from '@actions/exec'
 import {downloadTool} from '@actions/tool-cache'
 
-const cniPluginsVersion = 'v1.2.0'
-const criDockerVersion = 'v0.3.1'
-const crictlVersion = 'v1.26.1'
+// TODO: automate updating these versions
+const cniPluginsVersion = 'v1.6.2'
+const criDockerVersion = 'v0.3.16'
+const crictlVersion = 'v1.32.0'
 
 const installCniPlugins = async (): Promise<void> => {
   const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`
