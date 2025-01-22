@@ -146,28 +146,28 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-test-macos-qemu-driver:
-    runs-on: macos-14
-    steps:
-      - name: setup docker
-        shell: bash
-        run: |
-          brew install kubernetes-cli
-          brew tap cfergeau/crc
-          brew install vfkit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: vfkit
-      - run: |
-          kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
-      # Test basic networking and DNS resolution
-      - run: |
-          kubectl run \
-            --attach \
-            --image=docker.io/busybox \
-            --restart=Never \
-            --rm \
-            nslookup \
-            -- \
-            nslookup kubernetes.default.svc.cluster.local
+  test-macos-qemu-driver:
+      runs-on: macos-15
+      steps:
+        - name: setup docker
+          shell: bash
+          run: |
+            brew install kubernetes-cli
+            brew tap cfergeau/crc
+            brew install vfkit
+        - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        - uses: ./
+          with:
+            driver: vfkit
+        - run: |
+            kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
+        # Test basic networking and DNS resolution
+        - run: |
+            kubectl run \
+              --attach \
+              --image=docker.io/busybox \
+              --restart=Never \
+              --rm \
+              nslookup \
+              -- \
+              nslookup kubernetes.default.svc.cluster.local
