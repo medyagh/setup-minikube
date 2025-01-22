@@ -15,6 +15,7 @@ const compat = new FlatCompat({
 });
 
 export default [{
+    files: ["src/*.ts"],
     ignores: ["**/dist/", "**/lib/", "**/node_modules/"],
 }, ...compat.extends("google"), {
     plugins: {
