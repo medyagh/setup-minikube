@@ -8,7 +8,7 @@ export default [
       ignorePatterns: [
         'dist/*', 
         'lib/*',
-        'node_modules/*', 
-        
+        'node_modules/*', ]
+      
   }
 ];
