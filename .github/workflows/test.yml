@@ -65,13 +65,14 @@ jobs:
       # Should be fine
       - run: |
           cat ~/.minikube/profiles/minikube/config.json | grep ValidatingAdmissionPolicy
-  test-none-driver:
+  test-none-driver-start-args-verbose:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
           driver: none
+          start-args: --alsologtostderr
       - run: |
           kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
       # Test basic networking and DNS resolution
