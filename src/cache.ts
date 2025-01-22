@@ -41,6 +41,7 @@ export const getMinikubeVersion = async (): Promise<string> => {
   let version = ''
   // const options: any = {}
   const options: {listeners: {stdout: (data: Buffer) => void}} = {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     listeners: {stdout: (data: Buffer) => void {}},
   }
 
