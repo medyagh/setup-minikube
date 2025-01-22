@@ -292,9 +292,10 @@ exports.installNoneDriverDeps = void 0;
 const core_1 = __nccwpck_require__(7484);
 const exec_1 = __nccwpck_require__(5236);
 const tool_cache_1 = __nccwpck_require__(3472);
-const cniPluginsVersion = 'v1.2.0';
-const criDockerVersion = 'v0.3.1';
-const crictlVersion = 'v1.26.1';
+// TODO: automate updating these versions
+const cniPluginsVersion = 'v1.6.2';
+const criDockerVersion = 'v0.3.16';
+const crictlVersion = 'v1.32.0';
 const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
     const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`;
     const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
