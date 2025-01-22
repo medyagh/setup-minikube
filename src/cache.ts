@@ -39,7 +39,9 @@ export const restoreCaches = async (): Promise<CacheHits> => {
 
 export const getMinikubeVersion = async (): Promise<string> => {
   let version = ''
-  const options: any = {}
+  // const options: any = {}
+  const options: { listeners: { stdout: (data: Buffer) => void } } = { listeners: { stdout: (data: Buffer) => void {} } }
+  
   options.listeners = {
     stdout: (data: Buffer) => {
       version += data.toString()
