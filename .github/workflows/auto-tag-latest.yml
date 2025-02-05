@@ -1,13 +1,16 @@
 name: "auto-tag-latest"
+permissions:
+  contents: write
 on:
   release:
     types: [published]
 jobs:
+  # move the "latest" and major version tags to the latest release, e.g., v1, to enable
+  # consumers to subscribe to the latest reverse-compatible release
   auto-tag-latest:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - run: |
-          git push --delete origin latest
-          git tag latest ${{ github.ref_name }}
-          git push origin latest
+      - uses: Actions-R-Us/actions-tagger@v2
+        with:
+          publish_latest_tag: true
+          prefer_branch_releases: false 
