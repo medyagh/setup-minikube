@@ -121,28 +121,36 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-  # test-macos-docker-driver:
-  #   runs-on: macos-12
-  #   steps:
-  #     - name: setup docker
-  #       shell: bash
-  #       run: |
-  #         brew install kubernetes-cli
-  #         brew install docker
-  #         colima start
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-  #     - uses: ./
-  #       with:
-  #         driver: docker
-  #     - run: |
-  #         kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
-  #     # Test basic networking and DNS resolution
-  #     - run: |
-  #         kubectl run \
-  #           --attach \
-  #           --image=docker.io/busybox \
-  #           --restart=Never \
-  #           --rm \
-  #           nslookup \
-  #           -- \
-  #           nslookup kubernetes.default.svc.cluster.local
+  test-kvm-driver:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: ./
+        with:
+          driver: kvm2
+          start: false
+      - name: Run QEMU
+        id: run-qemu
+        uses: ./
+        with:
+          video-record: true
+          run: |
+            minikube version          
+            minikube start --driver=kvm2 --alsologtostderr
+          append: 'console=ttyS0'
+          flags: |
+            -usb
+            -device
+            nec-usb-xhci,id=xhci
+            -drive
+            if=none,id=usbstick,file=usb-storage.img,format=raw
+            -device
+            usb-storage,id=usbdrive,bus=xhci.0,drive=usbstick
+      - name: Upload video
+        uses: actions/upload-artifact@v4
+        with:
+          name: recording
+          path: ${{ steps.run-qemu.outputs.video-output }}
