@@ -131,10 +131,10 @@ jobs:
       - uses: ./
         with:
           driver: kvm2
-          start: false
+          start: "false"
       - name: Run QEMU
         id: run-qemu
-        uses: ./
+        uses: etchdroid/qemu-kvm-action@latest
         with:
           video-record: true
           run: |
