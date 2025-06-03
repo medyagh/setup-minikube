@@ -134,7 +134,7 @@ jobs:
           start: "false"
       - name: Run QEMU
         id: run-qemu
-        uses: etchdroid/qemu-kvm-action@latest
+        uses: etchdroid/qemu-kvm-action@v1.0.2
         with:
           video-record: true
           run: |
