@@ -100,7 +100,7 @@ test('getDownloadURL Linux', () => {
   ]
 
   for (const tc of tests) {
-    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.arch.mockReturnValue(tc.arch as NodeJS.Architecture)
     mockedOS.platform.mockReturnValue('linux')
 
     const url = getDownloadURL(tc.version)
@@ -150,7 +150,7 @@ test('getDownloadURL macOS', () => {
   ]
 
   for (const tc of tests) {
-    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.arch.mockReturnValue(tc.arch as NodeJS.Architecture)
     mockedOS.platform.mockReturnValue('darwin')
 
     const url = getDownloadURL(tc.version)
@@ -182,7 +182,7 @@ test('getDownloadURL Windows', () => {
   ]
 
   for (const tc of tests) {
-    mockedOS.arch.mockReturnValue(tc.arch)
+    mockedOS.arch.mockReturnValue(tc.arch as NodeJS.Architecture)
     mockedOS.platform.mockReturnValue('win32')
 
     const url = getDownloadURL(tc.version)
