@@ -150,7 +150,7 @@ test('getDownloadURL macOS', () => {
   ]
 
   for (const tc of tests) {
-    mockedOS.arch.mockReturnValue(tc.arch as NodeJS.Architecture) 
+    mockedOS.arch.mockReturnValue(tc.arch as NodeJS.Architecture)
     mockedOS.platform.mockReturnValue('darwin')
 
     const url = getDownloadURL(tc.version)
