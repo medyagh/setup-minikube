@@ -15,6 +15,7 @@ export const setArgs = (args: string[]) => {
     {key: 'memory', flag: '--memory'},
     {key: 'mount-path', flag: '--mount-string'},
     {key: 'network-plugin', flag: '--network-plugin'},
+    {key: 'nodes', flag: '--nodes'},
     {key: 'wait', flag: '--wait'},
   ]
   inputs.forEach((input) => {
