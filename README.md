@@ -91,6 +91,16 @@ By default setup-minikube caches the ISO, kicbase, and preload using GitHub Acti
 </details>
 
 <details>
+  <summary>nodes (optional)</summary>
+  <pre>
+    - default: '' (minikube will auto-set)
+    - options:
+      - '<number>'
+    - example: 4
+  </pre>
+</details>
+
+<details>
   <summary>cpus (optional)</summary>
   <pre>
     - default: '' (minikube will auto-set)
@@ -289,6 +299,7 @@ jobs:
           driver: docker
           container-runtime: containerd
           kubernetes-version: v1.22.3
+          nodes: 2
           cpus: 4
           memory: 4000m
           cni: bridge
