@@ -108,7 +108,7 @@ jobs:
   test-vfkit-driver-start-args-verbose:
     runs-on: macos-13 
     steps:
-      - name: Install vfkit
+      - name: install vfkit and enable bootpd
         shell: bash
         run: |
           brew install vfkit
@@ -116,14 +116,21 @@ jobs:
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
           sudo $fw --unblock /usr/libexec/bootpd
+      - name: info block
+        shell: bash
+        run: |
+          sysctl -n hw.memsize
+          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
+          sysctl -n hw.ncpu
+          sysctl -n machdep.cpu.brand_string
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
           driver: vfkit
-          start-args: --no-kubernetes --alsologtostderr
+          start-args: --no-kubernetes --memory=max --alsologtostderr
       - run: |
           minikube profile list
-          minikube ssh -- lsb
+          minikube ssh -- ls -lah
   test-podman-driver:
     runs-on: ubuntu-24.04
     steps:
