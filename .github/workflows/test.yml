@@ -105,6 +105,25 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
+  test-vfkit-driver-start-args-verbose:
+    runs-on: macos-13 
+    steps:
+      - name: Install vfkit
+        shell: bash
+        run: |
+          brew install vfkit
+          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
+          sudo $fw --remove /usr/libexec/bootpd
+          sudo $fw --add /usr/libexec/bootpd
+          sudo $fw --unblock /usr/libexec/bootpd
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: ./
+        with:
+          driver: vfkit
+          start-args: --no-kubernetes --alsologtostderr
+      - run: |
+          minikube profile list
+          minikube ssh -- lsb
   test-podman-driver:
     runs-on: ubuntu-24.04
     steps:
