@@ -65,6 +65,10 @@ inputs:
     description: 'Mount the source directory from your host into the target directory inside the cluster (format: <source directory>:<target directory>)'
     required: false
     default: ''
+  nodes:
+    description: 'The total number of nodes to spin up.'
+    required: false
+    default: ''
   install-path:
     description: 'Path where the executables (minikube) will get installed. Useful when having multiple self-hosted runners on one machine.'
     required: false

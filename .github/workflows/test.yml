@@ -2,7 +2,9 @@ name: "build-test"
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
-      [ opened, synchronize, reopened ]
+      - opened
+      - synchronize
+      - reopened
   schedule:
     # every 4 hours
     - cron: "0 */4 * * *"
@@ -10,6 +12,9 @@ on: # rebuild any PRs and main branch changes
     branches:
       - master
       - 'releases/*'
+defaults:
+  run:
+    shell: bash # set bash as default shell
 jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
@@ -42,6 +47,21 @@ jobs:
       # Test that minikube max-pods extraConfig has been set
       - run: |
           cat ~/.minikube/profiles/minikube/config.json | jq '.KubernetesConfig.ExtraOptions[0].Key' | grep max-pods
+  test-nodes: # make sure that action supports 'nodes' input
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: ./
+        with:
+          nodes: 2
+      # Test that there are 2 minikube nodes after startup
+      - run: |
+          if [ $(kubectl get nodes --no-headers | wc -l) -eq 2 ]; then
+            echo "The cluster has exactly 2 nodes."
+          else
+            echo "::error::The cluster does not have 2 nodes."
+            exit 1
+          fi
   test-insecure-registry:
     runs-on: ubuntu-latest
     steps:
