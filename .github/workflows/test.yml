@@ -106,7 +106,7 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-vfkit-driver-start-args-verbose:
-    runs-on: macos-13 
+    runs-on: macos-15
     steps:
       - name: install vfkit and enable bootpd
         shell: bash
@@ -127,7 +127,7 @@ jobs:
       - uses: ./
         with:
           driver: vfkit
-          start-args: --no-kubernetes --memory=max --alsologtostderr
+          start-args: --no-kubernetes --cpus=max --memory=max --alsologtostderr
       - run: |
           minikube profile list
           minikube ssh -- ls -lah
