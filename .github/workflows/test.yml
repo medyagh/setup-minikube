@@ -111,17 +111,19 @@ jobs:
       - name: install vfkit and enable bootpd and vmnet-helper
         shell: bash
         run: |
+          brew install hyperkit
           brew install vfkit
           fw=/usr/libexec/ApplicationFirewall/socketfilterfw
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
           sudo $fw --unblock /usr/libexec/bootpd
+          # install vmnet-helper
           tag="$(curl -fsSL https://api.github.com/repos/nirs/vmnet-helper/releases/latest | jq -r .tag_name)"
           machine="$(uname -m)"
           archive="vmnet-helper-$tag-$machine.tar.gz"
           curl -LOf "https://github.com/nirs/vmnet-helper/releases/download/$tag/$archive"
           sudo tar xvf "$archive" -C / opt/vmnet-helper
-          rm "$archive"
+          rm "$archive"          
       - name: info block
         shell: bash
         run: |
@@ -132,7 +134,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
-          driver: vfkit
+          driver: hyperkit
           start-args: --no-kubernetes --cpus=max --memory=max --alsologtostderr
           minikube-version: HEAD
       - run: |
