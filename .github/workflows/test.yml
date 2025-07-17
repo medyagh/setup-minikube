@@ -106,12 +106,12 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-vfkit-driver-start-args-verbose:
-    runs-on: macos-15
+    runs-on: macos-13
     steps:
       - name: install vfkit and enable bootpd and vmnet-helper
         shell: bash
         run: |
-          brew install hyperkit
+          brew install hyperkit || true
           brew install vfkit
           fw=/usr/libexec/ApplicationFirewall/socketfilterfw
           sudo $fw --remove /usr/libexec/bootpd
@@ -134,7 +134,7 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
-          driver: hyperkit
+          driver: vfkit
           start-args: --no-kubernetes --cpus=max --memory=max --alsologtostderr
           minikube-version: HEAD
       - run: |
