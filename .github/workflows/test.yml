@@ -108,7 +108,7 @@ jobs:
   test-vfkit-driver-start-args-verbose:
     runs-on: macos-15
     steps:
-      - name: install vfkit and enable bootpd
+      - name: install vfkit and enable bootpd and vmnet-helper
         shell: bash
         run: |
           brew install vfkit
@@ -116,6 +116,12 @@ jobs:
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
           sudo $fw --unblock /usr/libexec/bootpd
+          tag="$(curl -fsSL https://api.github.com/repos/nirs/vmnet-helper/releases/latest | jq -r .tag_name)"
+          machine="$(uname -m)"
+          archive="vmnet-helper-$tag-$machine.tar.gz"
+          curl -LOf "https://github.com/nirs/vmnet-helper/releases/download/$tag/$archive"
+          sudo tar xvf "$archive" -C / opt/vmnet-helper
+          rm "$archive"
       - name: info block
         shell: bash
         run: |
