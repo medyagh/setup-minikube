@@ -128,6 +128,7 @@ jobs:
         with:
           driver: vfkit
           start-args: --no-kubernetes --cpus=max --memory=max --alsologtostderr
+          minikube-version: HEAD
       - run: |
           minikube profile list
           minikube ssh -- ls -lah
