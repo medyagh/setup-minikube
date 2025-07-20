@@ -136,8 +136,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
-          driver: vfkit
-          start-args: --no-kubernetes --cpus=max --memory=max --alsologtostderr
+          driver: qemu
+          start-args: --memory=4gb --alsologtostderr
           minikube-version: HEAD
       - run: |
           minikube profile list
