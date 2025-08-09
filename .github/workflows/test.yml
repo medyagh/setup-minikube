@@ -105,7 +105,7 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-  test-qemu-driver-start-args-verbose:
+  test-qemu-driver-start-args-verbose-HEAD:
     runs-on: macos-13
     steps:
       - name: info
