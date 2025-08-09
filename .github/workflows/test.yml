@@ -142,6 +142,48 @@ jobs:
       - run: |
           minikube profile list
           minikube ssh -- ls -lah
+  test-vfkit-driver-macos-HEAD:
+    runs-on: macos-13
+    steps:
+      - name: info
+        shell: bash
+        run: |
+          echo "macOS version:"
+          sw_vers
+          uname -a
+          sysctl -n hw.memsize
+          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
+          sysctl -n hw.ncpu
+          sysctl -n machdep.cpu.brand_string
+          sysctl hw.model
+          sysctl -n kern.hv_vmm_present
+          sysctl -n kern.hv_support
+          system_profiler SPHardwareDataType
+          ifconfig
+      - name: install vfkit and tools needed
+        shell: bash
+        run: |
+          brew update 
+          brew install vfkit
+          machine="$(uname -m)"
+          archive="vmnet-helper-$machine.tar.gz"
+          curl -LOf "https://github.com/nirs/vmnet-helper/releases/latest/download/$archive"
+          sudo tar xvf "$archive" -C / opt/vmnet-helper
+          rm "$archive"
+          sudo install -m 0640 /opt/vmnet-helper/share/doc/vmnet-helper/sudoers.d/vmnet-helper /etc/sudoers.d/
+          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
+          sudo $fw --remove /usr/libexec/bootpd
+          sudo $fw --add /usr/libexec/bootpd
+          sudo $fw --unblock /usr/libexec/bootpd
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: ./
+        with:
+          driver: vfkit
+          start-args: --memory=4gb --network vmnet-shared --alsologtostderr
+          minikube-version: HEAD
+      - run: |
+          minikube profile list
+          minikube ssh -- ls -lah
   test-podman-driver:
     runs-on: ubuntu-24.04
     steps:
