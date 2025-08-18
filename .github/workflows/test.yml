@@ -19,7 +19,7 @@ jobs:
   build: # make sure build/ci work properly
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
         with:
           node-version: 20
@@ -30,7 +30,7 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           addons: ingress
@@ -40,7 +40,7 @@ jobs:
   test-extraOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           extra-config: 'kubelet.max-pods=10'
@@ -50,7 +50,7 @@ jobs:
   test-nodes: # make sure that action supports 'nodes' input
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           nodes: 2
@@ -65,7 +65,7 @@ jobs:
   test-insecure-registry:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           insecure-registry: '192.168.0.0/16'
@@ -75,7 +75,7 @@ jobs:
   test-featureGatesOptions:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           feature-gates: 'ValidatingAdmissionPolicy=true'
@@ -88,7 +88,7 @@ jobs:
   test-none-driver-start-args-verbose:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           driver: none
@@ -133,7 +133,7 @@ jobs:
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
           sudo $fw --unblock /usr/libexec/bootpd
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           driver: qemu
@@ -175,7 +175,7 @@ jobs:
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
           sudo $fw --unblock /usr/libexec/bootpd
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           driver: vfkit
@@ -204,7 +204,7 @@ jobs:
           echo "--------------------------"
           podman ps || true
           echo "--------------------------"
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
       - uses: ./
         with:
           driver: podman
@@ -229,7 +229,7 @@ jobs:
   #         brew install kubernetes-cli
   #         brew install docker
   #         colima start
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+  #     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
   #     - uses: ./
   #       with:
   #         driver: docker
