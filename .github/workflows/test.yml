@@ -80,7 +80,7 @@ jobs:
         with:
           feature-gates: 'ValidatingAdmissionPolicy=true'
           extra-config: 'apiserver.runtime-config=admissionregistration.k8s.io/v1alpha1'
-          kubernetes-version: 1.26.0
+          kubernetes-version: 1.28.0
           container-runtime: containerd
       # Should be fine
       - run: |
@@ -165,12 +165,7 @@ jobs:
         run: |
           brew update 
           brew install vfkit
-          machine="$(uname -m)"
-          archive="vmnet-helper-$machine.tar.gz"
-          curl -LOf "https://github.com/nirs/vmnet-helper/releases/latest/download/$archive"
-          sudo tar xvf "$archive" -C / opt/vmnet-helper
-          rm "$archive"
-          sudo install -m 0640 /opt/vmnet-helper/share/doc/vmnet-helper/sudoers.d/vmnet-helper /etc/sudoers.d/
+          curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | sudo VMNET_INTERACTIVE=0 bash
           fw=/usr/libexec/ApplicationFirewall/socketfilterfw
           sudo $fw --remove /usr/libexec/bootpd
           sudo $fw --add /usr/libexec/bootpd
