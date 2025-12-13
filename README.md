@@ -1,7 +1,8 @@
+# setup-minikube[![CI](https://github.com/medyagh/setup-minikube/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/medyagh/setup-minikube/actions/workflows/test.yml)
 
-## About setup-minikube
+
 - build/deploy/test your application against a certified Kubernetes cluster in GitHub Actions.
-- officialy maintained by minikube maintainers.
+- maintained by official minikube maintainers.
 
 ## Basic Usage
 ```
