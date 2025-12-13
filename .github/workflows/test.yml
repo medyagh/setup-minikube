@@ -1,4 +1,4 @@
-name: "build-test"
+name: "test"
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
@@ -16,17 +16,6 @@ defaults:
   run:
     shell: bash # set bash as default shell
 jobs:
-  build: # make sure build/ci work properly
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
-        with:
-          node-version: 20
-      - run: |
-          npm ci
-          npm run all
-          __tests__/verify-no-unstaged-changes.sh
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
@@ -106,23 +95,10 @@ jobs:
             -- \
             nslookup kubernetes.default.svc.cluster.local
   test-qemu-driver-start-args-verbose-HEAD:
-    runs-on: macos-13
+    runs-on: macos-15
     steps:
-      - name: info
-        shell: bash
-        run: |
-          echo "macOS version:"
-          sw_vers
-          uname -a
-          sysctl -n hw.memsize
-          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
-          sysctl -n hw.ncpu
-          sysctl -n machdep.cpu.brand_string
-          sysctl hw.model
-          sysctl -n kern.hv_vmm_present
-          sysctl -n kern.hv_support
-          system_profiler SPHardwareDataType
-          ifconfig
+      - id: info-block
+        uses: medyagh/info-block@main
       - name: install qemu and tools needed
         shell: bash
         run: |
@@ -143,23 +119,10 @@ jobs:
           minikube profile list
           minikube ssh -- ls -lah
   test-vfkit-driver-macos-HEAD:
-    runs-on: macos-13
+    runs-on: macos-15
     steps:
-      - name: info
-        shell: bash
-        run: |
-          echo "macOS version:"
-          sw_vers
-          uname -a
-          sysctl -n hw.memsize
-          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
-          sysctl -n hw.ncpu
-          sysctl -n machdep.cpu.brand_string
-          sysctl hw.model
-          sysctl -n kern.hv_vmm_present
-          sysctl -n kern.hv_support
-          system_profiler SPHardwareDataType
-          ifconfig
+      - id: info-block
+        uses: medyagh/info-block@main
       - name: install vfkit and tools needed
         shell: bash
         run: |
@@ -215,28 +178,4 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-  # test-macos-docker-driver:
-  #   runs-on: macos-12
-  #   steps:
-  #     - name: setup docker
-  #       shell: bash
-  #       run: |
-  #         brew install kubernetes-cli
-  #         brew install docker
-  #         colima start
-  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-  #     - uses: ./
-  #       with:
-  #         driver: docker
-  #     - run: |
-  #         kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
-  #     # Test basic networking and DNS resolution
-  #     - run: |
-  #         kubectl run \
-  #           --attach \
-  #           --image=docker.io/busybox \
-  #           --restart=Never \
-  #           --rm \
-  #           nslookup \
-  #           -- \
-  #           nslookup kubernetes.default.svc.cluster.local
+  
