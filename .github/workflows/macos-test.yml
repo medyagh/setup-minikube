@@ -1,4 +1,4 @@
-name: "macos-test"
+name: "macos-test (flaky)"
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
