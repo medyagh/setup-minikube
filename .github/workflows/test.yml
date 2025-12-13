@@ -16,76 +16,103 @@ defaults:
   run:
     shell: bash # set bash as default shell
 jobs:
-  test: # make sure the action works on a clean machine without building
-    runs-on: ubuntu-latest
+  test-linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+        scenario:
+          - ingress
+          - extra-options
+          - nodes
+          - insecure-registry
+          - feature-gates
+          - none-driver
+          - podman
+        include:
+          - scenario: ingress
+            addons: ingress
+          - scenario: extra-options
+            extra_config: kubelet.max-pods=10
+          - scenario: nodes
+            nodes: 2
+          - scenario: insecure-registry
+            insecure_registry: 192.168.0.0/16
+          - scenario: feature-gates
+            feature_gates: ValidatingAdmissionPolicy=true
+            extra_config: apiserver.runtime-config=admissionregistration.k8s.io/v1alpha1
+            kubernetes_version: 1.28.0
+            container_runtime: containerd
+          - scenario: none-driver
+            driver: none
+            start_args: --alsologtostderr
+          - scenario: podman
+            driver: podman
+    runs-on: ${{ matrix.os }}
     steps:
+      - name: Install Podman
+        if: matrix.scenario == 'podman'
+        run: |
+          lsb_release -a
+          sudo apt update
+          sudo apt install -y podman
+          echo "--------------------------"
+          podman version || true
+          echo "--------------------------"
+          podman info || true
+          echo "--------------------------"
+          podman system df || true
+          echo "--------------------------"
+          podman system info --format='{{json .}}'|| true
+          echo "--------------------------"
+          podman ps || true
+          echo "--------------------------"
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - uses: ./
         with:
-          addons: ingress
-      # Test that nginx ingress has been enabled
-      - run: |
+          addons: ${{ matrix.addons || '' }}
+          extra-config: ${{ matrix.extra_config || '' }}
+          nodes: ${{ matrix.nodes || '' }}
+          insecure-registry: ${{ matrix.insecure_registry || '' }}
+          feature-gates: ${{ matrix.feature_gates || '' }}
+          kubernetes-version: ${{ matrix.kubernetes_version || '' }}
+          container-runtime: ${{ matrix.container_runtime || '' }}
+          driver: ${{ matrix.driver || '' }}
+          start-args: ${{ matrix.start_args || '' }}
+      - name: Verify ingress addon enabled
+        if: matrix.scenario == 'ingress'
+        run: |
           minikube addons list | grep 'ingress ' | grep enabled
-  test-extraOptions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          extra-config: 'kubelet.max-pods=10'
-      # Test that minikube max-pods extraConfig has been set
-      - run: |
+      - name: Verify max pods extra config
+        if: matrix.scenario == 'extra-options'
+        run: |
           cat ~/.minikube/profiles/minikube/config.json | jq '.KubernetesConfig.ExtraOptions[0].Key' | grep max-pods
-  test-nodes: # make sure that action supports 'nodes' input
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          nodes: 2
-      # Test that there are 2 minikube nodes after startup
-      - run: |
+      - name: Verify node count
+        if: matrix.scenario == 'nodes'
+        run: |
           if [ $(kubectl get nodes --no-headers | wc -l) -eq 2 ]; then
             echo "The cluster has exactly 2 nodes."
           else
             echo "::error::The cluster does not have 2 nodes."
             exit 1
           fi
-  test-insecure-registry:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          insecure-registry: '192.168.0.0/16'
-      # Test that minikube max-pods extraConfig has been set
-      - run: |
+      - name: Verify insecure registry configured
+        if: matrix.scenario == 'insecure-registry'
+        run: |
           minikube ssh cat /lib/systemd/system/docker.service | grep 192.168.0.0/16
-  test-featureGatesOptions:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          feature-gates: 'ValidatingAdmissionPolicy=true'
-          extra-config: 'apiserver.runtime-config=admissionregistration.k8s.io/v1alpha1'
-          kubernetes-version: 1.28.0
-          container-runtime: containerd
-      # Should be fine
-      - run: |
+      - name: Verify feature gates enabled
+        if: matrix.scenario == 'feature-gates'
+        run: |
           cat ~/.minikube/profiles/minikube/config.json | grep ValidatingAdmissionPolicy
-  test-none-driver-start-args-verbose:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: none
-          start-args: --alsologtostderr
-      - run: |
+      - name: Wait for CoreDNS rollout
+        if: matrix.scenario == 'none-driver' || matrix.scenario == 'podman'
+        run: |
           kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
-      # Test basic networking and DNS resolution
-      - run: |
+      - name: Verify DNS resolution
+        if: matrix.scenario == 'none-driver' || matrix.scenario == 'podman'
+        run: |
           kubectl run \
             --attach \
             --image=docker.io/busybox \
@@ -97,8 +124,21 @@ jobs:
   test-qemu-driver-start-args-verbose-HEAD:
     runs-on: macos-15
     steps:
-      - id: info-block
-        uses: medyagh/info-block@main
+      - name: info
+        shell: bash
+        run: |
+          echo "macOS version:"
+          sw_vers
+          uname -a
+          sysctl -n hw.memsize
+          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
+          sysctl -n hw.ncpu
+          sysctl -n machdep.cpu.brand_string
+          sysctl hw.model
+          sysctl -n kern.hv_vmm_present
+          sysctl -n kern.hv_support
+          system_profiler SPHardwareDataType
+          ifconfig
       - name: install qemu and tools needed
         shell: bash
         run: |
@@ -121,8 +161,21 @@ jobs:
   test-vfkit-driver-macos-HEAD:
     runs-on: macos-15
     steps:
-      - id: info-block
-        uses: medyagh/info-block@main
+      - name: info
+        shell: bash
+        run: |
+          echo "macOS version:"
+          sw_vers
+          uname -a
+          sysctl -n hw.memsize
+          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
+          sysctl -n hw.ncpu
+          sysctl -n machdep.cpu.brand_string
+          sysctl hw.model
+          sysctl -n kern.hv_vmm_present
+          sysctl -n kern.hv_support
+          system_profiler SPHardwareDataType
+          ifconfig
       - name: install vfkit and tools needed
         shell: bash
         run: |
@@ -142,40 +195,3 @@ jobs:
       - run: |
           minikube profile list
           minikube ssh -- ls -lah
-  test-podman-driver:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Install Podman
-        shell: bash
-        run: |
-          lsb_release -a
-          sudo apt update
-          sudo apt install -y podman
-          echo "--------------------------"
-          podman version || true
-          echo "--------------------------"
-          podman info || true
-          echo "--------------------------"
-          podman system df || true
-          echo "--------------------------"
-          podman system info --format='{{json .}}'|| true
-          echo "--------------------------"
-          podman ps || true
-          echo "--------------------------"
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: podman
-      - run: |
-          kubectl --namespace=kube-system rollout status deployment/coredns --timeout=60s --watch
-      # Test basic networking and DNS resolution
-      - run: |
-          kubectl run \
-            --attach \
-            --image=docker.io/busybox \
-            --restart=Never \
-            --rm \
-            nslookup \
-            -- \
-            nslookup kubernetes.default.svc.cluster.local
-  
