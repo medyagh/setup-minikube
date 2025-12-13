@@ -1,4 +1,4 @@
-name: "test"
+name: "ci"
 on: # rebuild any PRs and main branch changes
   pull_request:
     types:
@@ -16,7 +16,7 @@ defaults:
   run:
     shell: bash # set bash as default shell
 jobs:
-  test:
+  matrix:
     strategy:
       fail-fast: false
       matrix:
