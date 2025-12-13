@@ -16,7 +16,7 @@ defaults:
   run:
     shell: bash # set bash as default shell
 jobs:
-  test-linux:
+  test:
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +31,7 @@ jobs:
           - feature-gates
           - none-driver
           - podman
-          - minikube-version
+          - minikube-version-HEAD
         include:
           - scenario: ingress
             addons: ingress
@@ -51,7 +51,7 @@ jobs:
             start_args: --alsologtostderr
           - scenario: podman
             driver: podman
-          - scenario: minikube-version
+          - scenario: minikube-version-HEAD
             minikube_version: HEAD
     runs-on: ${{ matrix.os }}
     steps:
@@ -126,51 +126,3 @@ jobs:
             nslookup \
             -- \
             nslookup kubernetes.default.svc.cluster.local
-  test-qemu-driver-start-args-verbose-HEAD:
-    runs-on: macos-latest
-    steps:
-      - id: info-block
-        uses: medyagh/info-block@v1
-      - name: install qemu and tools needed
-        shell: bash
-        run: |
-          brew update 
-          brew install qemu socket_vmnet
-          HOMEBREW=$(which brew) && sudo ${HOMEBREW} services start socket_vmnet  
-          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
-          sudo $fw --remove /usr/libexec/bootpd
-          sudo $fw --add /usr/libexec/bootpd
-          sudo $fw --unblock /usr/libexec/bootpd
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: qemu
-          start-args: --memory=4gb --alsologtostderr
-          minikube-version: HEAD
-      - run: |
-          minikube profile list
-          minikube ssh -- ls -lah
-  test-vfkit-driver-macos-HEAD:
-    runs-on: macos-latest
-    steps:
-      - id: info-block
-        uses: medyagh/info-block@main
-      - name: install vfkit and tools needed
-        shell: bash
-        run: |
-          brew update 
-          brew install vfkit
-          curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | sudo VMNET_INTERACTIVE=0 bash
-          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
-          sudo $fw --remove /usr/libexec/bootpd
-          sudo $fw --add /usr/libexec/bootpd
-          sudo $fw --unblock /usr/libexec/bootpd
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: vfkit
-          start-args: --memory=4gb --network vmnet-shared --alsologtostderr
-          minikube-version: HEAD
-      - run: |
-          minikube profile list
-          minikube ssh -- ls -lah
