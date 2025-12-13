@@ -97,21 +97,8 @@ jobs:
   test-qemu-driver-start-args-verbose-HEAD:
     runs-on: macos-15
     steps:
-      - name: info
-        shell: bash
-        run: |
-          echo "macOS version:"
-          sw_vers
-          uname -a
-          sysctl -n hw.memsize
-          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
-          sysctl -n hw.ncpu
-          sysctl -n machdep.cpu.brand_string
-          sysctl hw.model
-          sysctl -n kern.hv_vmm_present
-          sysctl -n kern.hv_support
-          system_profiler SPHardwareDataType
-          ifconfig
+      - id: info-block
+        uses: medyagh/info-block@main
       - name: install qemu and tools needed
         shell: bash
         run: |
@@ -134,21 +121,8 @@ jobs:
   test-vfkit-driver-macos-HEAD:
     runs-on: macos-15
     steps:
-      - name: info
-        shell: bash
-        run: |
-          echo "macOS version:"
-          sw_vers
-          uname -a
-          sysctl -n hw.memsize
-          echo "$(sysctl -n hw.memsize) / 1024 / 1024 / 1024" | bc
-          sysctl -n hw.ncpu
-          sysctl -n machdep.cpu.brand_string
-          sysctl hw.model
-          sysctl -n kern.hv_vmm_present
-          sysctl -n kern.hv_support
-          system_profiler SPHardwareDataType
-          ifconfig
+      - id: info-block
+        uses: medyagh/info-block@main
       - name: install vfkit and tools needed
         shell: bash
         run: |
