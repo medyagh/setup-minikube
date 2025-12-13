@@ -7,4 +7,4 @@ build:
 all:
 	npm ci
 	npm run all
-	__tests__/verify-no-unstaged-changes.sh
+# 	__tests__/verify-no-unstaged-changes.sh

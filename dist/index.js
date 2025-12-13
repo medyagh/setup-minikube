@@ -338,7 +338,8 @@ const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, f
     yield installCriDocker();
 });
 const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
-    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`;
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`;
     const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
     yield (0, exec_1.exec)('sudo', [
         'tar',

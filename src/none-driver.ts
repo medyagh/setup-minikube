@@ -56,7 +56,8 @@ const installConntrackSocatCriDocker = async (): Promise<void> => {
 }
 
 const installCrictl = async (): Promise<void> => {
-  const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`
   const crictlDownload = downloadTool(crictlURL)
   await exec('sudo', [
     'tar',
