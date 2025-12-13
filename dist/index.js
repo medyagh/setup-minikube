@@ -295,8 +295,8 @@ const exec_1 = __nccwpck_require__(5236);
 const tool_cache_1 = __nccwpck_require__(3472);
 // TODO: automate updating these versions
 const cniPluginsVersion = 'v1.6.2';
-const criDockerVersion = 'v0.3.16';
-const crictlVersion = 'v1.32.0';
+const criDockerVersion = 'v0.4.0';
+const crictlVersion = 'v1.34.0';
 const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
     const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
     const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`;
@@ -311,30 +311,34 @@ const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
     ]);
 });
 const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
-    let codename = '';
-    const options = {
-        listeners: {
-            stdout: (data) => {
-                codename += data.toString();
-            },
-        },
-    };
-    yield (0, exec_1.exec)('lsb_release', ['--short', '--codename'], options);
-    codename = codename.trim();
-    // Check if the codename is one of the expected values
-    // because Cri-dockerd doesnt support "noble" yet, we will default to "jammy"
-    if (!['bionic', 'focal', 'jammy'].includes(codename)) {
-        codename = 'jammy';
-    }
     const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
-    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(/^v/, '')}.3-0.ubuntu-${codename}_${arch}.deb`;
-    const criDockerDownload = (0, tool_cache_1.downloadTool)(criDockerURL);
-    yield (0, exec_1.exec)('sudo', ['dpkg', '--install', yield criDockerDownload]);
+    const version = criDockerVersion.replace(/^v/, '');
+    const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`;
+    const criDockerArchive = (0, tool_cache_1.downloadTool)(tgzURL);
+    const extractDir = `/tmp/cri-dockerd-${arch}`;
+    yield (0, exec_1.exec)('mkdir', ['-p', extractDir]);
+    yield (0, exec_1.exec)('tar', ['zxvf', yield criDockerArchive, '-C', extractDir]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        `${extractDir}/cri-dockerd/cri-dockerd`,
+        '/usr/bin/cri-dockerd',
+    ]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        `${extractDir}/cri-dockerd/cri-docker.socket`,
+        '/usr/lib/systemd/system/cri-docker.socket',
+    ]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        `${extractDir}/cri-dockerd/cri-docker.service`,
+        '/usr/lib/systemd/system/cri-docker.service',
+    ]);
+    yield (0, exec_1.exec)('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd']);
 });
 const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, exec_1.exec)('sudo', ['apt-get', 'update', '-qq']);
     yield (0, exec_1.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
-    // Need to wait for the dpkg frontend lock to install cri-docker
+    // Install cri-docker after dependency packages
     yield installCriDocker();
 });
 const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
