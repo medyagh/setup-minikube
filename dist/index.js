@@ -295,10 +295,11 @@ const exec_1 = __nccwpck_require__(5236);
 const tool_cache_1 = __nccwpck_require__(3472);
 // TODO: automate updating these versions
 const cniPluginsVersion = 'v1.6.2';
-const criDockerVersion = 'v0.3.16';
-const crictlVersion = 'v1.32.0';
+const criDockerVersion = 'v0.4.0';
+const crictlVersion = 'v1.34.0';
 const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
-    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`;
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`;
     const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
     yield (0, exec_1.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
     yield (0, exec_1.exec)('sudo', [
@@ -310,33 +311,43 @@ const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
     ]);
 });
 const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
-    let codename = '';
-    const options = {
-        listeners: {
-            stdout: (data) => {
-                codename += data.toString();
-            },
-        },
-    };
-    yield (0, exec_1.exec)('lsb_release', ['--short', '--codename'], options);
-    codename = codename.trim();
-    // Check if the codename is one of the expected values
-    // because Cri-dockerd doesnt support "noble" yet, we will default to "jammy"
-    if (!['bionic', 'focal', 'jammy'].includes(codename)) {
-        codename = 'jammy';
-    }
-    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(/^v/, '')}.3-0.ubuntu-${codename}_amd64.deb`;
-    const criDockerDownload = (0, tool_cache_1.downloadTool)(criDockerURL);
-    yield (0, exec_1.exec)('sudo', ['dpkg', '--install', yield criDockerDownload]);
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const version = criDockerVersion.replace(/^v/, '');
+    const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`;
+    const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`;
+    const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`;
+    const criDockerArchive = (0, tool_cache_1.downloadTool)(tgzURL);
+    const criDockerService = (0, tool_cache_1.downloadTool)(serviceURL);
+    const criDockerSocket = (0, tool_cache_1.downloadTool)(socketURL);
+    const extractDir = `/tmp/cri-dockerd-${arch}`;
+    yield (0, exec_1.exec)('mkdir', ['-p', extractDir]);
+    yield (0, exec_1.exec)('tar', ['zxvf', yield criDockerArchive, '-C', extractDir]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        `${extractDir}/cri-dockerd/cri-dockerd`,
+        '/usr/bin/cri-dockerd',
+    ]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        yield criDockerSocket,
+        '/usr/lib/systemd/system/cri-docker.socket',
+    ]);
+    yield (0, exec_1.exec)('sudo', [
+        'mv',
+        yield criDockerService,
+        '/usr/lib/systemd/system/cri-docker.service',
+    ]);
+    yield (0, exec_1.exec)('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd']);
 });
 const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, exec_1.exec)('sudo', ['apt-get', 'update', '-qq']);
     yield (0, exec_1.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
-    // Need to wait for the dpkg frontend lock to install cri-docker
+    // Install cri-docker after dependency packages
     yield installCriDocker();
 });
 const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
-    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`;
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`;
     const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
     yield (0, exec_1.exec)('sudo', [
         'tar',

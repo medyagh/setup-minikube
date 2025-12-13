@@ -4,11 +4,12 @@ import {downloadTool} from '@actions/tool-cache'
 
 // TODO: automate updating these versions
 const cniPluginsVersion = 'v1.6.2'
-const criDockerVersion = 'v0.3.16'
-const crictlVersion = 'v1.32.0'
+const criDockerVersion = 'v0.4.0'
+const crictlVersion = 'v1.34.0'
 
 const installCniPlugins = async (): Promise<void> => {
-  const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`
   const cniPluginsDownload = downloadTool(cniPluginsURL)
   await exec('sudo', ['mkdir', '-p', '/opt/cni/bin'])
   await exec('sudo', [
@@ -21,40 +22,47 @@ const installCniPlugins = async (): Promise<void> => {
 }
 
 const installCriDocker = async (): Promise<void> => {
-  let codename = ''
-  const options = {
-    listeners: {
-      stdout: (data: Buffer) => {
-        codename += data.toString()
-      },
-    },
-  }
-  await exec('lsb_release', ['--short', '--codename'], options)
-  codename = codename.trim()
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const version = criDockerVersion.replace(/^v/, '')
+  const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`
+  const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`
+  const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`
 
-  // Check if the codename is one of the expected values
-  // because Cri-dockerd doesnt support "noble" yet, we will default to "jammy"
-  if (!['bionic', 'focal', 'jammy'].includes(codename)) {
-    codename = 'jammy'
-  }
+  const criDockerArchive = downloadTool(tgzURL)
+  const criDockerService = downloadTool(serviceURL)
+  const criDockerSocket = downloadTool(socketURL)
+  const extractDir = `/tmp/cri-dockerd-${arch}`
 
-  const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(
-    /^v/,
-    ''
-  )}.3-0.ubuntu-${codename}_amd64.deb`
-  const criDockerDownload = downloadTool(criDockerURL)
-  await exec('sudo', ['dpkg', '--install', await criDockerDownload])
+  await exec('mkdir', ['-p', extractDir])
+  await exec('tar', ['zxvf', await criDockerArchive, '-C', extractDir])
+  await exec('sudo', [
+    'mv',
+    `${extractDir}/cri-dockerd/cri-dockerd`,
+    '/usr/bin/cri-dockerd',
+  ])
+  await exec('sudo', [
+    'mv',
+    await criDockerSocket,
+    '/usr/lib/systemd/system/cri-docker.socket',
+  ])
+  await exec('sudo', [
+    'mv',
+    await criDockerService,
+    '/usr/lib/systemd/system/cri-docker.service',
+  ])
+  await exec('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd'])
 }
 
 const installConntrackSocatCriDocker = async (): Promise<void> => {
   await exec('sudo', ['apt-get', 'update', '-qq'])
   await exec('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat'])
-  // Need to wait for the dpkg frontend lock to install cri-docker
+  // Install cri-docker after dependency packages
   await installCriDocker()
 }
 
 const installCrictl = async (): Promise<void> => {
-  const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-amd64.tar.gz`
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`
   const crictlDownload = downloadTool(crictlURL)
   await exec('sudo', [
     'tar',
