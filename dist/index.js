@@ -314,7 +314,11 @@ const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
     const version = criDockerVersion.replace(/^v/, '');
     const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`;
+    const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`;
+    const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`;
     const criDockerArchive = (0, tool_cache_1.downloadTool)(tgzURL);
+    const criDockerService = (0, tool_cache_1.downloadTool)(serviceURL);
+    const criDockerSocket = (0, tool_cache_1.downloadTool)(socketURL);
     const extractDir = `/tmp/cri-dockerd-${arch}`;
     yield (0, exec_1.exec)('mkdir', ['-p', extractDir]);
     yield (0, exec_1.exec)('tar', ['zxvf', yield criDockerArchive, '-C', extractDir]);
@@ -325,12 +329,12 @@ const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     ]);
     yield (0, exec_1.exec)('sudo', [
         'mv',
-        `${extractDir}/cri-dockerd/cri-docker.socket`,
+        yield criDockerSocket,
         '/usr/lib/systemd/system/cri-docker.socket',
     ]);
     yield (0, exec_1.exec)('sudo', [
         'mv',
-        `${extractDir}/cri-dockerd/cri-docker.service`,
+        yield criDockerService,
         '/usr/lib/systemd/system/cri-docker.service',
     ]);
     yield (0, exec_1.exec)('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd']);

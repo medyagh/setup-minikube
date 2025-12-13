@@ -25,7 +25,12 @@ const installCriDocker = async (): Promise<void> => {
   const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
   const version = criDockerVersion.replace(/^v/, '')
   const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`
+  const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`
+  const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`
+
   const criDockerArchive = downloadTool(tgzURL)
+  const criDockerService = downloadTool(serviceURL)
+  const criDockerSocket = downloadTool(socketURL)
   const extractDir = `/tmp/cri-dockerd-${arch}`
 
   await exec('mkdir', ['-p', extractDir])
@@ -37,12 +42,12 @@ const installCriDocker = async (): Promise<void> => {
   ])
   await exec('sudo', [
     'mv',
-    `${extractDir}/cri-dockerd/cri-docker.socket`,
+    await criDockerSocket,
     '/usr/lib/systemd/system/cri-docker.socket',
   ])
   await exec('sudo', [
     'mv',
-    `${extractDir}/cri-dockerd/cri-docker.service`,
+    await criDockerService,
     '/usr/lib/systemd/system/cri-docker.service',
   ])
   await exec('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd'])
