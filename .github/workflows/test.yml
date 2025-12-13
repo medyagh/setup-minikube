@@ -31,6 +31,7 @@ jobs:
           - feature-gates
           - none-driver
           - podman
+          - minikube-version
         include:
           - scenario: ingress
             addons: ingress
@@ -50,6 +51,8 @@ jobs:
             start_args: --alsologtostderr
           - scenario: podman
             driver: podman
+          - scenario: minikube-version
+            minikube_version: HEAD
     runs-on: ${{ matrix.os }}
     steps:
       - id: info-block
@@ -83,6 +86,7 @@ jobs:
           container-runtime: ${{ matrix.container_runtime || '' }}
           driver: ${{ matrix.driver || '' }}
           start-args: ${{ matrix.start_args || '' }}
+          minikube-version: ${{ matrix.minikube_version || '' }}
       - name: Verify ingress addon enabled
         if: matrix.scenario == 'ingress'
         run: |
