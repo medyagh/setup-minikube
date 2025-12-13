@@ -31,12 +31,7 @@ jobs:
           - feature-gates
           - none-driver
           - podman
-<<<<<<< ours
           - minikube-version
-||||||| base
-          - minikube-head
-=======
->>>>>>> theirs
         include:
           - scenario: ingress
             addons: ingress
@@ -56,14 +51,8 @@ jobs:
             start_args: --alsologtostderr
           - scenario: podman
             driver: podman
-<<<<<<< ours
           - scenario: minikube-version
             minikube_version: HEAD
-||||||| base
-          - scenario: minikube-head
-            minikube_version: HEAD
-=======
->>>>>>> theirs
     runs-on: ${{ matrix.os }}
     steps:
       - id: info-block
