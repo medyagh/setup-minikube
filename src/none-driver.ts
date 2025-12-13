@@ -39,10 +39,11 @@ const installCriDocker = async (): Promise<void> => {
     codename = 'jammy'
   }
 
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
   const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(
     /^v/,
     ''
-  )}.3-0.ubuntu-${codename}_amd64.deb`
+  )}.3-0.ubuntu-${codename}_${arch}.deb`
   const criDockerDownload = downloadTool(criDockerURL)
   await exec('sudo', ['dpkg', '--install', await criDockerDownload])
 }

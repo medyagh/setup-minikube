@@ -326,7 +326,8 @@ const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
     if (!['bionic', 'focal', 'jammy'].includes(codename)) {
         codename = 'jammy';
     }
-    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(/^v/, '')}.3-0.ubuntu-${codename}_amd64.deb`;
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const criDockerURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd_${criDockerVersion.replace(/^v/, '')}.3-0.ubuntu-${codename}_${arch}.deb`;
     const criDockerDownload = (0, tool_cache_1.downloadTool)(criDockerURL);
     yield (0, exec_1.exec)('sudo', ['dpkg', '--install', yield criDockerDownload]);
 });
