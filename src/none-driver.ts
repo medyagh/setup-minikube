@@ -8,7 +8,8 @@ const criDockerVersion = 'v0.3.16'
 const crictlVersion = 'v1.32.0'
 
 const installCniPlugins = async (): Promise<void> => {
-  const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`
+  const arch = process.arch === 'arm64' ? 'arm64' : 'amd64'
+  const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`
   const cniPluginsDownload = downloadTool(cniPluginsURL)
   await exec('sudo', ['mkdir', '-p', '/opt/cni/bin'])
   await exec('sudo', [

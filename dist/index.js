@@ -298,7 +298,8 @@ const cniPluginsVersion = 'v1.6.2';
 const criDockerVersion = 'v0.3.16';
 const crictlVersion = 'v1.32.0';
 const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
-    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-amd64-${cniPluginsVersion}.tgz`;
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`;
     const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
     yield (0, exec_1.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
     yield (0, exec_1.exec)('sudo', [
