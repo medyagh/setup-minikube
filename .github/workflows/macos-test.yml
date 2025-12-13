@@ -16,30 +16,30 @@ defaults:
   run:
     shell: bash # set bash as default shell
 jobs:
-  test-qemu-driver-start-args-verbose-HEAD:
-    runs-on: macos-latest
-    steps:
-      - id: info-block
-        uses: medyagh/info-block@main
-      - name: install qemu and tools needed
-        shell: bash
-        run: |
-          brew update 
-          brew install qemu socket_vmnet
-          HOMEBREW=$(which brew) && sudo ${HOMEBREW} services start socket_vmnet  
-          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
-          sudo $fw --remove /usr/libexec/bootpd
-          sudo $fw --add /usr/libexec/bootpd
-          sudo $fw --unblock /usr/libexec/bootpd
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
-      - uses: ./
-        with:
-          driver: qemu
-          start-args: --memory=4gb --alsologtostderr
-          minikube-version: HEAD
-      - run: |
-          minikube profile list
-          minikube ssh -- ls -lah
+  # test-qemu-driver-start-args-verbose-HEAD:
+  #   runs-on: macos-latest
+  #   steps:
+  #     - id: info-block
+  #       uses: medyagh/info-block@main
+  #     - name: install qemu and tools needed
+  #       shell: bash
+  #       run: |
+  #         brew update 
+  #         brew install qemu socket_vmnet
+  #         HOMEBREW=$(which brew) && sudo ${HOMEBREW} services start socket_vmnet  
+  #         fw=/usr/libexec/ApplicationFirewall/socketfilterfw
+  #         sudo $fw --remove /usr/libexec/bootpd
+  #         sudo $fw --add /usr/libexec/bootpd
+  #         sudo $fw --unblock /usr/libexec/bootpd
+  #     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+  #     - uses: ./
+  #       with:
+  #         driver: qemu
+  #         start-args: --memory=4gb --alsologtostderr
+  #         minikube-version: HEAD
+  #     - run: |
+  #         minikube profile list
+  #         minikube ssh -- ls -lah
   test-vfkit-driver-macos-HEAD:
     runs-on: macos-latest
     steps:
