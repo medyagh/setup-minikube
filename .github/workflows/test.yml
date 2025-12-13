@@ -109,7 +109,7 @@ jobs:
       - name: Verify feature gates enabled
         if: matrix.scenario == 'feature-gates'
         run: |
-          cat ~/.minikube/profiles/minikube/config.json | grep ValidatingAdmissionPolicy
+          jq -e '.KubernetesConfig.FeatureGates.SidecarContainers == true' ~/.minikube/profiles/minikube/config.json
       - name: Wait for CoreDNS rollout
         if: matrix.scenario == 'none-driver' || matrix.scenario == 'podman'
         run: |
