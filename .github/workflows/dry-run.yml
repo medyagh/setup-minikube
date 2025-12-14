@@ -34,10 +34,11 @@ jobs:
         uses: medyagh/info-block@main
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
       - name: Set up Docker
+        if: runner.os == 'macOS'
         uses: docker/setup-docker-action@v4
       - uses: ./
         with:
-          start-args: --downoload-only
+          start-args: --download-only
       - uses: ./
         with:
           start-args: --dry-run
