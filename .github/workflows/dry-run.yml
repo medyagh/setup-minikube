@@ -33,8 +33,11 @@ jobs:
       - id: info-block
         uses: medyagh/info-block@main
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
-      - name: Set up Docker
-        uses: docker/setup-docker-action@v4
+      - name: Install Docker CLI (macOS only)
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install docker
       - uses: ./
         with:
           start-args: --download-only
