@@ -38,9 +38,19 @@ jobs:
         run: |
           brew update
           brew install docker
+      - name: install vfkit and tools needed
+        shell: bash
+        run: |
+          brew update 
+          brew install vfkit
+          curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | sudo VMNET_INTERACTIVE=0 bash
+          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
+          sudo $fw --remove /usr/libexec/bootpd
+          sudo $fw --add /usr/libexec/bootpd
+          sudo $fw --unblock /usr/libexec/bootpd
       - uses: ./
         with:
-          start-args: --download-only
+          start-args: --download-only --vm
       - uses: ./
         with:
           start-args: --dry-run
