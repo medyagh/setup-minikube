@@ -51,7 +51,7 @@ jobs:
           sudo $fw --unblock /usr/libexec/bootpd
       - uses: ./
         with:
-          start-args: --download-only --vm
+          start-args: --download-only
       - uses: ./
         with:
           start-args: --dry-run
