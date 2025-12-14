@@ -39,6 +39,7 @@ jobs:
           brew update
           brew install docker
       - name: install vfkit and tools needed
+        if: runner.os == 'macOS'
         shell: bash
         run: |
           brew update 
