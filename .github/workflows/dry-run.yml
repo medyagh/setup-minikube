@@ -1,0 +1,34 @@
+name: "dry-run"
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  schedule:
+    - cron: "0 */4 * * *"
+  push:
+    branches:
+      - master
+      - 'releases/*'
+defaults:
+  run:
+    shell: bash
+jobs:
+  dry-run:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - ubuntu-24.04-arm
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - id: info-block
+        uses: medyagh/info-block@main
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - uses: ./
+        with:
+          start-args: --dry-run
