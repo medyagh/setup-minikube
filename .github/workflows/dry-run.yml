@@ -1,0 +1,57 @@
+name: "dry-run"
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+  schedule:
+    - cron: "0 */4 * * *"
+  push:
+    branches:
+      - master
+      - 'releases/*'
+defaults:
+  run:
+    shell: bash
+concurrency:
+  group: dry-run-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  dry-run:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          - ubuntu-22.04
+          - ubuntu-24.04-arm
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - id: info-block
+        uses: medyagh/info-block@main
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8
+      - name: Install Docker CLI (macOS only)
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install docker
+      - name: install vfkit and tools needed
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          brew update 
+          brew install vfkit
+          curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | sudo VMNET_INTERACTIVE=0 bash
+          fw=/usr/libexec/ApplicationFirewall/socketfilterfw
+          sudo $fw --remove /usr/libexec/bootpd
+          sudo $fw --add /usr/libexec/bootpd
+          sudo $fw --unblock /usr/libexec/bootpd
+      - uses: ./
+        with:
+          start-args: --download-only
+      - uses: ./
+        with:
+          start-args: --dry-run
