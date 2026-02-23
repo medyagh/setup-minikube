@@ -6,8 +6,8 @@ on: # rebuild any PRs and main branch changes
       - synchronize
       - reopened
   schedule:
-    # every 4 hours
-    - cron: "0 */4 * * *"
+    # every sunday
+    - cron: "0 0 * * 0"
   push:
     branches:
       - master
