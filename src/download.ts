@@ -1,7 +1,8 @@
-import {addPath} from '@actions/core'
+import {addPath, info} from '@actions/core'
 import {exec} from '@actions/exec'
 import {mkdirP, cp, rmRF} from '@actions/io'
 import {downloadTool} from '@actions/tool-cache'
+import {existsSync} from 'fs'
 import {arch, homedir, platform as getPlatform} from 'os'
 import {join} from 'path'
 
@@ -55,7 +56,12 @@ export const downloadMinikube = async (
   }
   await mkdirP(installPath)
   await exec('chmod', ['+x', downloadPath])
-  await cp(downloadPath, join(installPath, 'minikube'))
+  const destPath = join(installPath, 'minikube')
+  if (existsSync(destPath)) {
+    info(`Minikube already exists at ${destPath}, deleting it...`)
+    await rmRF(destPath)
+  }
+  await cp(downloadPath, destPath)
   await rmRF(downloadPath)
   addPath(installPath)
 }
