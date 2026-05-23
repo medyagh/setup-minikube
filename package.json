@@ -53,6 +53,7 @@
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
   },
+  "//": "Force babel-plugin-istanbul v8 so npm ci no longer pulls deprecated glob@7/inflight via test-exclude.",
   "overrides": {
     "babel-plugin-istanbul": "^8.0.0"
   }
