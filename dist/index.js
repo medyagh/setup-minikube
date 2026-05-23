@@ -96584,6 +96584,10 @@ var lib_exec = __nccwpck_require__(5236);
 var io = __nccwpck_require__(4994);
 // EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
 var tool_cache = __nccwpck_require__(3472);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(9896);
+;// CONCATENATED MODULE: external "fs/promises"
+const promises_namespaceObject = require("fs/promises");
 // EXTERNAL MODULE: external "os"
 var external_os_ = __nccwpck_require__(857);
 // EXTERNAL MODULE: external "path"
@@ -96598,6 +96602,8 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+
+
 
 
 
@@ -96647,7 +96653,16 @@ const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, voi
     }
     yield (0,io.mkdirP)(installPath);
     yield (0,lib_exec.exec)('chmod', ['+x', downloadPath]);
-    yield (0,io.cp)(downloadPath, (0,external_path_.join)(installPath, 'minikube'));
+    const destPath = (0,external_path_.join)(installPath, 'minikube');
+    const tmpDestPath = `${destPath}.tmp`;
+    if ((0,external_fs_.existsSync)(tmpDestPath)) {
+        yield (0,io.rmRF)(tmpDestPath);
+    }
+    yield (0,io.cp)(downloadPath, tmpDestPath);
+    if ((0,external_fs_.existsSync)(destPath)) {
+        (0,lib_core.info)(`Minikube already exists at ${destPath}, replacing it atomically...`);
+    }
+    yield (0,promises_namespaceObject.rename)(tmpDestPath, destPath);
     yield (0,io.rmRF)(downloadPath);
     (0,lib_core.addPath)(installPath);
 });
@@ -96782,8 +96797,6 @@ function escapeProperty(s) {
 //# sourceMappingURL=command.js.map
 // EXTERNAL MODULE: external "crypto"
 var external_crypto_ = __nccwpck_require__(6982);
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(9896);
 ;// CONCATENATED MODULE: ./node_modules/@actions/cache/node_modules/@actions/core/lib/file-command.js
 // For internal use, subject to change.
 // We use any as a valid input type
