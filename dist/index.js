@@ -1,424 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 5914:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.saveCaches = exports.getMinikubeVersion = exports.restoreCaches = void 0;
-const cache_1 = __nccwpck_require__(5116);
-const core_1 = __nccwpck_require__(7484);
-const exec_1 = __nccwpck_require__(5236);
-const fs_1 = __nccwpck_require__(9896);
-const os_1 = __nccwpck_require__(857);
-const path_1 = __nccwpck_require__(6928);
-// Catch and log any unhandled exceptions. These exceptions can leak out of the
-// uploadChunk method in @actions/toolkit when a failed upload closes the file
-// descriptor causing any in-process reads to throw an uncaught exception.
-// Instead of failing this action, just warn.
-process.on('uncaughtException', (e) => {
-    (0, core_1.info)(`[warning]${e.message}`);
-});
-const restoreCaches = () => __awaiter(void 0, void 0, void 0, function* () {
-    const cacheHits = { iso: true, kic: true, preload: true };
-    if (!useCache()) {
-        return cacheHits;
-    }
-    const minikubeVersion = yield (0, exports.getMinikubeVersion)();
-    const isoCacheKey = restoreCache('iso', minikubeVersion);
-    const kicCacheKey = restoreCache('kic', minikubeVersion);
-    const preloadCacheKey = restoreCache('preloaded-tarball', minikubeVersion);
-    cacheHits.iso = typeof (yield isoCacheKey) !== 'undefined';
-    cacheHits.kic = typeof (yield kicCacheKey) !== 'undefined';
-    cacheHits.preload = typeof (yield preloadCacheKey) !== 'undefined';
-    return cacheHits;
-});
-exports.restoreCaches = restoreCaches;
-const getMinikubeVersion = () => __awaiter(void 0, void 0, void 0, function* () {
-    let version = '';
-    // const options: any = {}
-    const options = {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        listeners: { stdout: (data) => void {} },
-    };
-    options.listeners = {
-        stdout: (data) => {
-            version += data.toString();
-        },
-    };
-    yield (0, exec_1.exec)('minikube', ['version', '--short'], options);
-    return version.trim();
-});
-exports.getMinikubeVersion = getMinikubeVersion;
-const saveCaches = (cacheHits) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!useCache()) {
-        return;
-    }
-    const minikubeVersion = yield (0, exports.getMinikubeVersion)();
-    yield Promise.all([
-        saveCache('iso', cacheHits.iso, minikubeVersion),
-        saveCache('kic', cacheHits.kic, minikubeVersion),
-        saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion),
-    ]);
-});
-exports.saveCaches = saveCaches;
-const restoreCache = (name, minikubeVersion) => __awaiter(void 0, void 0, void 0, function* () {
-    return (0, cache_1.restoreCache)(getCachePaths(name), getCacheKey(name, minikubeVersion));
-});
-const saveCache = (name, cacheHit, minikubeVersion) => __awaiter(void 0, void 0, void 0, function* () {
-    if (cacheHit) {
-        return;
-    }
-    const cachePaths = getCachePaths(name);
-    if (!(0, fs_1.existsSync)(cachePaths[0])) {
-        return;
-    }
-    try {
-        yield (0, cache_1.saveCache)(cachePaths, getCacheKey(name, minikubeVersion));
-    }
-    catch (error) {
-        console.log(name + error);
-    }
-});
-const getCachePaths = (folderName) => {
-    return [(0, path_1.join)((0, os_1.homedir)(), '.minikube', 'cache', folderName)];
-};
-const getCacheKey = (name, minikubeVersion) => {
-    let cacheKey = `${name}-${minikubeVersion}-${(0, os_1.arch)()}`;
-    if (name === 'preloaded-tarball') {
-        const kubernetesVersion = getInput('kubernetes-version', 'stable');
-        const containerRuntime = getInput('container-runtime', 'docker');
-        cacheKey += `-${kubernetesVersion}-${containerRuntime}`;
-    }
-    return cacheKey;
-};
-// getInput gets the specified value from the users workflow yaml
-// if the value is empty the default value it returned
-const getInput = (name, defaultValue) => {
-    const value = (0, core_1.getInput)(name).toLowerCase();
-    return value !== '' ? value : defaultValue;
-};
-const useCache = () => (0, core_1.getInput)('cache').toLowerCase() === 'true';
-
-
-/***/ }),
-
-/***/ 1750:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.downloadMinikube = exports.getDownloadURL = void 0;
-const core_1 = __nccwpck_require__(7484);
-const exec_1 = __nccwpck_require__(5236);
-const io_1 = __nccwpck_require__(4994);
-const tool_cache_1 = __nccwpck_require__(3472);
-const fs_1 = __nccwpck_require__(9896);
-const os_1 = __nccwpck_require__(857);
-const path_1 = __nccwpck_require__(6928);
-const getDownloadURL = (version) => {
-    const osPlat = (0, os_1.platform)();
-    const osArch = getMinikubeArch();
-    const platform = osPlat === 'win32' ? 'windows' : osPlat;
-    const suffix = osPlat === 'win32' ? '.exe' : '';
-    switch (version) {
-        case 'latest':
-            return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-${osArch}${suffix}`;
-        case 'head':
-            return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-${osArch}${suffix}`;
-        default:
-            return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-${osArch}${suffix}`;
-    }
-};
-exports.getDownloadURL = getDownloadURL;
-const getMinikubeArch = () => {
-    switch ((0, os_1.arch)()) {
-        case 'x64':
-            return 'amd64';
-            break;
-        case 'arm64':
-            return 'arm64';
-            break;
-        case 'arm':
-            return 'arm';
-            break;
-        case 's390x':
-            return 's390x';
-            break;
-        case 'ppc64':
-            return 'ppc64le';
-            break;
-        default:
-            throw new Error(`Machine is of arch ${(0, os_1.arch)()}, which isn't supported by minikube.`);
-    }
-};
-const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, void 0, function* () {
-    const url = (0, exports.getDownloadURL)(version);
-    const downloadPath = yield (0, tool_cache_1.downloadTool)(url);
-    if (!installPath) {
-        installPath = (0, path_1.join)((0, os_1.homedir)(), 'bin');
-    }
-    yield (0, io_1.mkdirP)(installPath);
-    yield (0, exec_1.exec)('chmod', ['+x', downloadPath]);
-    const destPath = (0, path_1.join)(installPath, 'minikube');
-    if ((0, fs_1.existsSync)(destPath)) {
-        (0, core_1.info)(`Minikube already exists at ${destPath}, deleting it...`);
-        yield (0, io_1.rmRF)(destPath);
-    }
-    yield (0, io_1.cp)(downloadPath, destPath);
-    yield (0, io_1.rmRF)(downloadPath);
-    (0, core_1.addPath)(installPath);
-});
-exports.downloadMinikube = downloadMinikube;
-
-
-/***/ }),
-
-/***/ 6107:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.setArgs = void 0;
-const core_1 = __nccwpck_require__(7484);
-const setArgs = (args) => {
-    const inputs = [
-        { key: 'addons', flag: '--addons' },
-        { key: 'cni', flag: '--cni' },
-        { key: 'container-runtime', flag: '--container-runtime' },
-        { key: 'cpus', flag: '--cpus' },
-        { key: 'driver', flag: '--driver' },
-        { key: 'extra-config', flag: '--extra-config' },
-        { key: 'feature-gates', flag: '--feature-gates' },
-        { key: 'insecure-registry', flag: '--insecure-registry' },
-        { key: 'kubernetes-version', flag: '--kubernetes-version' },
-        { key: 'listen-address', flag: '--listen-address' },
-        { key: 'memory', flag: '--memory' },
-        { key: 'mount-path', flag: '--mount-string' },
-        { key: 'network-plugin', flag: '--network-plugin' },
-        { key: 'nodes', flag: '--nodes' },
-        { key: 'wait', flag: '--wait' },
-    ];
-    inputs.forEach((input) => {
-        const value = (0, core_1.getInput)(input.key);
-        if (value !== '') {
-            args.push(input.flag, value);
-        }
-    });
-    if ((0, core_1.getInput)('mount-path') !== '') {
-        args.push('--mount');
-    }
-    const startArgs = (0, core_1.getInput)('start-args');
-    if (startArgs !== '') {
-        args.push(...startArgs.split(' '));
-    }
-};
-exports.setArgs = setArgs;
-
-
-/***/ }),
-
-/***/ 5915:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const core_1 = __nccwpck_require__(7484);
-const download_1 = __nccwpck_require__(1750);
-const start_1 = __nccwpck_require__(4992);
-// main thing :)
-const run = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let minikubeVersion = (0, core_1.getInput)('minikube-version').toLowerCase();
-        minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion;
-        const installPath = (0, core_1.getInput)('install-path');
-        yield (0, download_1.downloadMinikube)(minikubeVersion, installPath);
-        if ((0, core_1.getInput)('start').toLowerCase() === 'true') {
-            yield (0, start_1.startMinikube)();
-        }
-    }
-    catch (error) {
-        if (error instanceof Error) {
-            (0, core_1.setFailed)(error.message);
-        }
-    }
-});
-run();
-
-
-/***/ }),
-
-/***/ 4119:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.installNoneDriverDeps = void 0;
-const core_1 = __nccwpck_require__(7484);
-const exec_1 = __nccwpck_require__(5236);
-const tool_cache_1 = __nccwpck_require__(3472);
-// TODO: automate updating these versions
-const cniPluginsVersion = 'v1.6.2';
-const criDockerVersion = 'v0.4.0';
-const crictlVersion = 'v1.34.0';
-const installCniPlugins = () => __awaiter(void 0, void 0, void 0, function* () {
-    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
-    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`;
-    const cniPluginsDownload = (0, tool_cache_1.downloadTool)(cniPluginsURL);
-    yield (0, exec_1.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
-    yield (0, exec_1.exec)('sudo', [
-        'tar',
-        'zxvf',
-        yield cniPluginsDownload,
-        '-C',
-        '/opt/cni/bin',
-    ]);
-});
-const installCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
-    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
-    const version = criDockerVersion.replace(/^v/, '');
-    const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`;
-    const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`;
-    const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`;
-    const criDockerArchive = (0, tool_cache_1.downloadTool)(tgzURL);
-    const criDockerService = (0, tool_cache_1.downloadTool)(serviceURL);
-    const criDockerSocket = (0, tool_cache_1.downloadTool)(socketURL);
-    const extractDir = `/tmp/cri-dockerd-${arch}`;
-    yield (0, exec_1.exec)('mkdir', ['-p', extractDir]);
-    yield (0, exec_1.exec)('tar', ['zxvf', yield criDockerArchive, '-C', extractDir]);
-    yield (0, exec_1.exec)('sudo', [
-        'mv',
-        `${extractDir}/cri-dockerd/cri-dockerd`,
-        '/usr/bin/cri-dockerd',
-    ]);
-    yield (0, exec_1.exec)('sudo', [
-        'mv',
-        yield criDockerSocket,
-        '/usr/lib/systemd/system/cri-docker.socket',
-    ]);
-    yield (0, exec_1.exec)('sudo', [
-        'mv',
-        yield criDockerService,
-        '/usr/lib/systemd/system/cri-docker.service',
-    ]);
-    yield (0, exec_1.exec)('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd']);
-});
-const installConntrackSocatCriDocker = () => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, exec_1.exec)('sudo', ['apt-get', 'update', '-qq']);
-    yield (0, exec_1.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
-    // Install cri-docker after dependency packages
-    yield installCriDocker();
-});
-const installCrictl = () => __awaiter(void 0, void 0, void 0, function* () {
-    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
-    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`;
-    const crictlDownload = (0, tool_cache_1.downloadTool)(crictlURL);
-    yield (0, exec_1.exec)('sudo', [
-        'tar',
-        'zxvf',
-        yield crictlDownload,
-        '-C',
-        '/usr/local/bin',
-    ]);
-});
-const makeCniDirectoryReadable = () => __awaiter(void 0, void 0, void 0, function* () {
-    // created by podman package with 700 root:root
-    yield (0, exec_1.exec)('sudo', ['chmod', '755', '/etc/cni/net.d']);
-});
-const installNoneDriverDeps = () => __awaiter(void 0, void 0, void 0, function* () {
-    const driver = (0, core_1.getInput)('driver').toLowerCase();
-    if (driver !== 'none') {
-        return;
-    }
-    yield Promise.all([
-        installCniPlugins(),
-        installConntrackSocatCriDocker(),
-        installCrictl(),
-        makeCniDirectoryReadable(),
-    ]);
-});
-exports.installNoneDriverDeps = installNoneDriverDeps;
-
-
-/***/ }),
-
-/***/ 4992:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.startMinikube = void 0;
-const exec_1 = __nccwpck_require__(5236);
-const core_1 = __nccwpck_require__(7484);
-const cache_1 = __nccwpck_require__(5914);
-const inputs_1 = __nccwpck_require__(6107);
-const none_driver_1 = __nccwpck_require__(4119);
-const startMinikube = () => __awaiter(void 0, void 0, void 0, function* () {
-    const args = ['start'];
-    (0, inputs_1.setArgs)(args);
-    const cacheHits = yield (0, cache_1.restoreCaches)();
-    yield (0, none_driver_1.installNoneDriverDeps)();
-    const installPath = (0, core_1.getInput)('install-path');
-    yield (0, exec_1.exec)('minikube', args, { cwd: installPath });
-    yield (0, cache_1.saveCaches)(cacheHits);
-});
-exports.startMinikube = startMinikube;
-
-
-/***/ }),
-
 /***/ 5116:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -91426,12 +91008,386 @@ module.exports = /*#__PURE__*/JSON.parse('[[[0,44],"disallowed_STD3_valid"],[[45
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __nccwpck_require__(5915);
-/******/ 	module.exports = __webpack_exports__;
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+(() => {
+"use strict";
+
+// EXTERNAL MODULE: ./node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(7484);
+// EXTERNAL MODULE: ./node_modules/@actions/exec/lib/exec.js
+var exec = __nccwpck_require__(5236);
+// EXTERNAL MODULE: ./node_modules/@actions/io/lib/io.js
+var io = __nccwpck_require__(4994);
+// EXTERNAL MODULE: ./node_modules/@actions/tool-cache/lib/tool-cache.js
+var tool_cache = __nccwpck_require__(3472);
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(9896);
+// EXTERNAL MODULE: external "os"
+var external_os_ = __nccwpck_require__(857);
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(6928);
+;// CONCATENATED MODULE: ./lib/download.js
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+
+
+const getDownloadURL = (version) => {
+    const osPlat = (0,external_os_.platform)();
+    const osArch = getMinikubeArch();
+    const platform = osPlat === 'win32' ? 'windows' : osPlat;
+    const suffix = osPlat === 'win32' ? '.exe' : '';
+    switch (version) {
+        case 'latest':
+            return `https://github.com/kubernetes/minikube/releases/latest/download/minikube-${platform}-${osArch}${suffix}`;
+        case 'head':
+            return `https://storage.googleapis.com/minikube-builds/master/minikube-${platform}-${osArch}${suffix}`;
+        default:
+            return `https://github.com/kubernetes/minikube/releases/download/v${version}/minikube-${platform}-${osArch}${suffix}`;
+    }
+};
+const getMinikubeArch = () => {
+    switch ((0,external_os_.arch)()) {
+        case 'x64':
+            return 'amd64';
+            break;
+        case 'arm64':
+            return 'arm64';
+            break;
+        case 'arm':
+            return 'arm';
+            break;
+        case 's390x':
+            return 's390x';
+            break;
+        case 'ppc64':
+            return 'ppc64le';
+            break;
+        default:
+            throw new Error(`Machine is of arch ${(0,external_os_.arch)()}, which isn't supported by minikube.`);
+    }
+};
+const downloadMinikube = (version, installPath) => __awaiter(void 0, void 0, void 0, function* () {
+    const url = getDownloadURL(version);
+    const downloadPath = yield (0,tool_cache.downloadTool)(url);
+    if (!installPath) {
+        installPath = (0,external_path_.join)((0,external_os_.homedir)(), 'bin');
+    }
+    yield (0,io.mkdirP)(installPath);
+    yield (0,exec.exec)('chmod', ['+x', downloadPath]);
+    const destPath = (0,external_path_.join)(installPath, 'minikube');
+    if ((0,external_fs_.existsSync)(destPath)) {
+        (0,core.info)(`Minikube already exists at ${destPath}, deleting it...`);
+        yield (0,io.rmRF)(destPath);
+    }
+    yield (0,io.cp)(downloadPath, destPath);
+    yield (0,io.rmRF)(downloadPath);
+    (0,core.addPath)(installPath);
+});
+
+// EXTERNAL MODULE: ./node_modules/@actions/cache/lib/cache.js
+var cache = __nccwpck_require__(5116);
+;// CONCATENATED MODULE: ./lib/cache.js
+var cache_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+
+// Catch and log any unhandled exceptions. These exceptions can leak out of the
+// uploadChunk method in @actions/toolkit when a failed upload closes the file
+// descriptor causing any in-process reads to throw an uncaught exception.
+// Instead of failing this action, just warn.
+process.on('uncaughtException', (e) => {
+    (0,core.info)(`[warning]${e.message}`);
+});
+const restoreCaches = () => cache_awaiter(void 0, void 0, void 0, function* () {
+    const cacheHits = { iso: true, kic: true, preload: true };
+    if (!useCache()) {
+        return cacheHits;
+    }
+    const minikubeVersion = yield getMinikubeVersion();
+    const isoCacheKey = restoreCache('iso', minikubeVersion);
+    const kicCacheKey = restoreCache('kic', minikubeVersion);
+    const preloadCacheKey = restoreCache('preloaded-tarball', minikubeVersion);
+    cacheHits.iso = typeof (yield isoCacheKey) !== 'undefined';
+    cacheHits.kic = typeof (yield kicCacheKey) !== 'undefined';
+    cacheHits.preload = typeof (yield preloadCacheKey) !== 'undefined';
+    return cacheHits;
+});
+const getMinikubeVersion = () => cache_awaiter(void 0, void 0, void 0, function* () {
+    let version = '';
+    // const options: any = {}
+    const options = {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        listeners: { stdout: (data) => void {} },
+    };
+    options.listeners = {
+        stdout: (data) => {
+            version += data.toString();
+        },
+    };
+    yield (0,exec.exec)('minikube', ['version', '--short'], options);
+    return version.trim();
+});
+const saveCaches = (cacheHits) => cache_awaiter(void 0, void 0, void 0, function* () {
+    if (!useCache()) {
+        return;
+    }
+    const minikubeVersion = yield getMinikubeVersion();
+    yield Promise.all([
+        saveCache('iso', cacheHits.iso, minikubeVersion),
+        saveCache('kic', cacheHits.kic, minikubeVersion),
+        saveCache('preloaded-tarball', cacheHits.preload, minikubeVersion),
+    ]);
+});
+const restoreCache = (name, minikubeVersion) => cache_awaiter(void 0, void 0, void 0, function* () {
+    return (0,cache.restoreCache)(getCachePaths(name), getCacheKey(name, minikubeVersion));
+});
+const saveCache = (name, cacheHit, minikubeVersion) => cache_awaiter(void 0, void 0, void 0, function* () {
+    if (cacheHit) {
+        return;
+    }
+    const cachePaths = getCachePaths(name);
+    if (!(0,external_fs_.existsSync)(cachePaths[0])) {
+        return;
+    }
+    try {
+        yield (0,cache.saveCache)(cachePaths, getCacheKey(name, minikubeVersion));
+    }
+    catch (error) {
+        console.log(name + error);
+    }
+});
+const getCachePaths = (folderName) => {
+    return [(0,external_path_.join)((0,external_os_.homedir)(), '.minikube', 'cache', folderName)];
+};
+const getCacheKey = (name, minikubeVersion) => {
+    let cacheKey = `${name}-${minikubeVersion}-${(0,external_os_.arch)()}`;
+    if (name === 'preloaded-tarball') {
+        const kubernetesVersion = getInput('kubernetes-version', 'stable');
+        const containerRuntime = getInput('container-runtime', 'docker');
+        cacheKey += `-${kubernetesVersion}-${containerRuntime}`;
+    }
+    return cacheKey;
+};
+// getInput gets the specified value from the users workflow yaml
+// if the value is empty the default value it returned
+const getInput = (name, defaultValue) => {
+    const value = (0,core.getInput)(name).toLowerCase();
+    return value !== '' ? value : defaultValue;
+};
+const useCache = () => (0,core.getInput)('cache').toLowerCase() === 'true';
+
+;// CONCATENATED MODULE: ./lib/inputs.js
+
+const setArgs = (args) => {
+    const inputs = [
+        { key: 'addons', flag: '--addons' },
+        { key: 'cni', flag: '--cni' },
+        { key: 'container-runtime', flag: '--container-runtime' },
+        { key: 'cpus', flag: '--cpus' },
+        { key: 'driver', flag: '--driver' },
+        { key: 'extra-config', flag: '--extra-config' },
+        { key: 'feature-gates', flag: '--feature-gates' },
+        { key: 'insecure-registry', flag: '--insecure-registry' },
+        { key: 'kubernetes-version', flag: '--kubernetes-version' },
+        { key: 'listen-address', flag: '--listen-address' },
+        { key: 'memory', flag: '--memory' },
+        { key: 'mount-path', flag: '--mount-string' },
+        { key: 'network-plugin', flag: '--network-plugin' },
+        { key: 'nodes', flag: '--nodes' },
+        { key: 'wait', flag: '--wait' },
+    ];
+    inputs.forEach((input) => {
+        const value = (0,core.getInput)(input.key);
+        if (value !== '') {
+            args.push(input.flag, value);
+        }
+    });
+    if ((0,core.getInput)('mount-path') !== '') {
+        args.push('--mount');
+    }
+    const startArgs = (0,core.getInput)('start-args');
+    if (startArgs !== '') {
+        args.push(...startArgs.split(' '));
+    }
+};
+
+;// CONCATENATED MODULE: ./lib/none-driver.js
+var none_driver_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+// TODO: automate updating these versions
+const cniPluginsVersion = 'v1.6.2';
+const criDockerVersion = 'v0.4.0';
+const crictlVersion = 'v1.34.0';
+const installCniPlugins = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const cniPluginsURL = `https://github.com/containernetworking/plugins/releases/download/${cniPluginsVersion}/cni-plugins-linux-${arch}-${cniPluginsVersion}.tgz`;
+    const cniPluginsDownload = (0,tool_cache.downloadTool)(cniPluginsURL);
+    yield (0,exec.exec)('sudo', ['mkdir', '-p', '/opt/cni/bin']);
+    yield (0,exec.exec)('sudo', [
+        'tar',
+        'zxvf',
+        yield cniPluginsDownload,
+        '-C',
+        '/opt/cni/bin',
+    ]);
+});
+const installCriDocker = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const version = criDockerVersion.replace(/^v/, '');
+    const tgzURL = `https://github.com/Mirantis/cri-dockerd/releases/download/${criDockerVersion}/cri-dockerd-${version}.${arch}.tgz`;
+    const serviceURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.service`;
+    const socketURL = `https://raw.githubusercontent.com/Mirantis/cri-dockerd/${criDockerVersion}/packaging/systemd/cri-docker.socket`;
+    const criDockerArchive = (0,tool_cache.downloadTool)(tgzURL);
+    const criDockerService = (0,tool_cache.downloadTool)(serviceURL);
+    const criDockerSocket = (0,tool_cache.downloadTool)(socketURL);
+    const extractDir = `/tmp/cri-dockerd-${arch}`;
+    yield (0,exec.exec)('mkdir', ['-p', extractDir]);
+    yield (0,exec.exec)('tar', ['zxvf', yield criDockerArchive, '-C', extractDir]);
+    yield (0,exec.exec)('sudo', [
+        'mv',
+        `${extractDir}/cri-dockerd/cri-dockerd`,
+        '/usr/bin/cri-dockerd',
+    ]);
+    yield (0,exec.exec)('sudo', [
+        'mv',
+        yield criDockerSocket,
+        '/usr/lib/systemd/system/cri-docker.socket',
+    ]);
+    yield (0,exec.exec)('sudo', [
+        'mv',
+        yield criDockerService,
+        '/usr/lib/systemd/system/cri-docker.service',
+    ]);
+    yield (0,exec.exec)('sudo', ['chmod', '+x', '/usr/bin/cri-dockerd']);
+});
+const installConntrackSocatCriDocker = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    yield (0,exec.exec)('sudo', ['apt-get', 'update', '-qq']);
+    yield (0,exec.exec)('sudo', ['apt-get', '-qq', '-y', 'install', 'conntrack', 'socat']);
+    // Install cri-docker after dependency packages
+    yield installCriDocker();
+});
+const installCrictl = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    const arch = process.arch === 'arm64' ? 'arm64' : 'amd64';
+    const crictlURL = `https://github.com/kubernetes-sigs/cri-tools/releases/download/${crictlVersion}/crictl-${crictlVersion}-linux-${arch}.tar.gz`;
+    const crictlDownload = (0,tool_cache.downloadTool)(crictlURL);
+    yield (0,exec.exec)('sudo', [
+        'tar',
+        'zxvf',
+        yield crictlDownload,
+        '-C',
+        '/usr/local/bin',
+    ]);
+});
+const makeCniDirectoryReadable = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    // created by podman package with 700 root:root
+    yield (0,exec.exec)('sudo', ['chmod', '755', '/etc/cni/net.d']);
+});
+const installNoneDriverDeps = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
+    const driver = (0,core.getInput)('driver').toLowerCase();
+    if (driver !== 'none') {
+        return;
+    }
+    yield Promise.all([
+        installCniPlugins(),
+        installConntrackSocatCriDocker(),
+        installCrictl(),
+        makeCniDirectoryReadable(),
+    ]);
+});
+
+;// CONCATENATED MODULE: ./lib/start.js
+var start_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+
+
+const startMinikube = () => start_awaiter(void 0, void 0, void 0, function* () {
+    const args = ['start'];
+    setArgs(args);
+    const cacheHits = yield restoreCaches();
+    yield installNoneDriverDeps();
+    const installPath = (0,core.getInput)('install-path');
+    yield (0,exec.exec)('minikube', args, { cwd: installPath });
+    yield saveCaches(cacheHits);
+});
+
+;// CONCATENATED MODULE: ./lib/main.js
+var main_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+
+
+// main thing :)
+const run = () => main_awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let minikubeVersion = (0,core.getInput)('minikube-version').toLowerCase();
+        minikubeVersion = minikubeVersion === 'stable' ? 'latest' : minikubeVersion;
+        const installPath = (0,core.getInput)('install-path');
+        yield downloadMinikube(minikubeVersion, installPath);
+        if ((0,core.getInput)('start').toLowerCase() === 'true') {
+            yield startMinikube();
+        }
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            (0,core.setFailed)(error.message);
+        }
+    }
+});
+run();
+
+})();
+
+module.exports = __webpack_exports__;
 /******/ })()
 ;
