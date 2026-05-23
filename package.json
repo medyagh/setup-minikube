@@ -52,5 +52,8 @@
     "prettier": "^3.8.3",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "babel-plugin-istanbul": "^8.0.0"
   }
 }
