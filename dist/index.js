@@ -149653,7 +149653,10 @@ const installCrictl = () => none_driver_awaiter(void 0, void 0, void 0, function
     ]);
 });
 const makeCniDirectoryReadable = () => none_driver_awaiter(void 0, void 0, void 0, function* () {
-    // created by podman package with 700 root:root
+    // Historically created by the podman package with 700 root:root, but
+    // newer runner images do not ship the directory at all, so create it
+    // before fixing permissions.
+    yield (0,lib_exec.exec)('sudo', ['mkdir', '-p', '/etc/cni/net.d']);
     yield (0,lib_exec.exec)('sudo', ['chmod', '755', '/etc/cni/net.d']);
 });
 const installNoneDriverDeps = () => none_driver_awaiter(void 0, void 0, void 0, function* () {

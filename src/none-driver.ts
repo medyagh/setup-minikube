@@ -74,7 +74,10 @@ const installCrictl = async (): Promise<void> => {
 }
 
 const makeCniDirectoryReadable = async (): Promise<void> => {
-  // created by podman package with 700 root:root
+  // Historically created by the podman package with 700 root:root, but
+  // newer runner images do not ship the directory at all, so create it
+  // before fixing permissions.
+  await exec('sudo', ['mkdir', '-p', '/etc/cni/net.d'])
   await exec('sudo', ['chmod', '755', '/etc/cni/net.d'])
 }
 
